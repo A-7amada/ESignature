@@ -1,0 +1,519 @@
+﻿@using BTIT.EPM.Authorization
+@using BTIT.EPM.Web.Areas.App.Models.DocumentRequests
+@using BTIT.EPM.Web.Areas.App.Startup
+@using BTIT.EPM.Lookups;
+@using Newtonsoft.Json;
+@model CreateOrEditDocumentRequestModalViewModel
+@{
+    ViewBag.CurrentPageName = AppPageNames.Tenant.DocumentRequests;
+}
+@section Styles
+{
+    <link rel="stylesheet" abp-href="/view-resources/Areas/App/Views/_Bundles/demo-ui-components.css" asp-append-version="true" />
+}
+
+
+@section Scripts
+{
+    <script abp-src="/view-resources/Areas/App/Views/_Bundles/vue.min.js" asp-append-version="true"></script>
+    <script src="~/assets/jquery-ui-1.12.1/jquery-ui.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <script>
+    $(function () {
+        Vue.directive('select', {
+            twoWay: true,
+            bind: function (el, binding, vnode) {
+                $(el).select2().on("select2:select", (e) => {
+                    // v-model looks for
+                    //  - an event named "change"
+                    //  - a value with property path "$event.target.value"
+                    el.dispatchEvent(new Event('change', { target: e.target }));
+                });
+            }
+        });
+
+        var vm = new Vue({
+            el: '#App',
+            data: {
+                model: @Html.Raw(JsonConvert.SerializeObject(Model)),
+                RecipientIndexForPin: "",
+                SelectedRecipientPin: "",
+                documentRequestService: abp.services.app.documentRequests,
+                usersService: abp.services.app.user,
+                baseFileUrl: abp.appPath,
+
+            },
+            methods: {
+                updateOrders: function () {
+                    var newOrder = $('#RecipientTable tbody').sortable("toArray");
+                    $("#RecipientTable tbody").sortable("cancel");
+                    var newItemList = [];
+                    for (var i = 0; i < newOrder.length; i++) {
+                       if (this.model.Recipients[parseInt(newOrder[i].replace("Recipient-", ''))] != null) {
+                            newItemList.push({
+                                "SigneOrder": i,
+                                "FieldName": this.model.Recipients[parseInt(newOrder[i].replace("Recipient-", ''))].FieldName,
+                                "Type": this.model.Recipients[parseInt(newOrder[i].replace("Recipient-", ''))].Type,
+                                "UserId": this.model.Recipients[parseInt(newOrder[i].replace("Recipient-", ''))].UserId,
+                                "FirstName": this.model.Recipients[parseInt(newOrder[i].replace("Recipient-", ''))].FirstName,
+                                "LastName": this.model.Recipients[parseInt(newOrder[i].replace("Recipient-", ''))].LastName,
+                                "Email": this.model.Recipients[parseInt(newOrder[i].replace("Recipient-", ''))].Email,
+                                "MobileNumber": this.model.Recipients[parseInt(newOrder[i].replace("Recipient-", ''))].MobileNumber,
+                                "IsSigningOrdered": true,
+                            });
+                        }
+                    }
+                    this.model.Recipients = newItemList;
+                },
+                FillUsers: function (type) {
+                    if (type === '@((int)RecipientType.Internal)') {
+                        this.usersService.getUsersForDropDown().done(function (data) {
+                            $(".user-id-ddl").select2({
+                                placeholder: app.localize('Select'),
+                                language: abp.localization.currentCulture.name,
+                                data: data
+                            }).trigger("change");
+                        });
+                    }
+                },
+                OpenPin: function (index) {
+                    this.RecipientIndexForPin = index;
+                    $("#pin-modal").modal("show");
+                },
+                SaveRecipientPin: function () {
+                    this.model.Recipients[this.RecipientIndexForPin].SignerPin = this.SelectedRecipientPin;
+                    $("#pin-modal").modal("hide");
+                },
+                OpenDeleteConfirmation: function (index) {
+                    var self = this;
+                    swal({
+                        title: app.localize('AreYouSure'),
+                        icon: "warning",
+                        buttons: [app.localize('Cancel'), app.localize('YesDelete')],
+                        dangerMode: true
+                    })
+                        .then((willDelete) => {
+                            if (willDelete) {
+                                self.model.Recipients.splice(index, 1);
+                            }
+                        });
+                },
+                AddNewRecipient: function () {
+                    var lastSigneOrder = this.model.Recipients.length + 1;
+                    var recipient = {
+                        Type: "", FirstName: "", LastName: "",
+                        Email: "", IsSigner: false, Code: null,
+                        SignerPin: "", UserId: "", FieldName: "", SigneOrder: lastSigneOrder
+                    };
+                    this.model.Recipients.push(recipient);
+                },
+                ValidateModel: function () {
+                    var validationResult = { isValid: true, message: "" };
+
+                    if ($("#files").find('a').length === 0) {
+                        validationResult.isValid = false;
+                        validationResult.message = app.localize('PleaseUploadDoc');
+                        return validationResult;
+                    }
+
+                    if (this.model.Recipients === null || this.model.Recipients.length === 0) {
+                        validationResult.isValid = false;
+                        validationResult.message = app.localize('AtleastOneRecipient');
+                    }
+                    else {
+                        $(this.model.Recipients).each(function (i, e) {
+                            if (e.Type === "" || e.Type === undefined || e.Type === null) {
+                                validationResult.isValid = false;
+                                validationResult.message = app.localize('PleaseChooseRecipientType');
+                                return;
+                            }
+                            else if (e.Type === '@((int)RecipientType.Internal)' && (e.UserId === "" || e.UserId === undefined || e.UserId === null)) {
+                                validationResult.isValid = false;
+                                validationResult.message = app.localize('PleaseChooseInternalUserRecipient');
+                                return;
+                            }
+                            else if (e.Type === '@((int)RecipientType.External)'
+                                && (e.FirstName === "" || e.FirstName === undefined || e.FirstName === null
+                                    || e.LastName === "" || e.LastName === undefined || e.LastName === null
+                                    || e.Email === "" || e.Email === undefined || e.Email === null
+                                    || e.MobileNumber === "" || e.MobileNumber === undefined || e.MobileNumber === null)) {
+                                validationResult.isValid = false;
+                                validationResult.message = app.localize('PleaseFillAllRecipientData');
+                                return;
+                            }
+
+                            if (e.Type === '@((int)RecipientType.External)' && e.Email !== "" && !IsValidEmail(e.Email)) {
+                                validationResult.isValid = false;
+                                validationResult.message = app.localize('EmailNotValid');
+                                return;
+                            }
+
+                            if (e.Type === '@((int)RecipientType.External)' && e.MobileNumber !== "" && !IsValidMobileNumber(e.MobileNumber)) {
+                                validationResult.isValid = false;
+                                validationResult.message = app.localize('MobileNumberValidation');
+                                return;
+                            }
+
+                            if (e.IsSigner) {
+                                if (e.FieldName === "" || e.FieldName === undefined || e.FieldName === null) {
+                                    validationResult.isValid = false;
+                                    validationResult.message = app.localize('CheckRecipientsData');
+                                    return;
+                                }
+                            }
+
+                        });
+                    }
+
+                    return validationResult;
+                },
+                Save: function () {
+                    var self = this;
+                    var validationResult = self.ValidateModel();
+                    if (!validationResult.isValid) {
+                        abp.message.error(app.localize(validationResult.message));
+                        return;
+                    }
+                    abp.ui.setBusy();
+                    self.documentRequestService.saveOrSend(
+                        self.model, false
+                    ).done(function () {
+                        abp.notify.info(app.localize('SavedSuccessfully'));
+                        window.location.href = abp.appPath + 'App/DocumentRequests';
+                    }).always(function () {
+                        abp.ui.clearBusy();
+                    });
+                },
+                Send: function () {
+                    var self = this;
+                    var validationResult = self.ValidateModel();
+                    if (!validationResult.isValid) {
+                        abp.message.error(app.localize(validationResult.message));
+                        return;
+                    }
+                    abp.ui.setBusy();
+                    self.documentRequestService.saveOrSend(
+                        self.model, true
+                    ).done(function () {
+                        abp.notify.info(app.localize('SavedSuccessfully'));
+                        window.location.href = abp.appPath + 'App/DocumentRequests';
+                    });
+                }
+            },
+            mounted: function () {
+                var self = this;
+                var url = abp.appPath + 'App/DocumentRequests/UploadFileAndSaveDocumentRequest';
+                $('#fileupload').fileupload({
+                    url: url,
+                    dataType: 'json',
+                    maxFileSize: 999000,
+                    dropZone: $('#fileuploadForm'),
+                    done: function (e, response) {
+                        var jsonResult = response.result;
+
+                        if (jsonResult.success) {
+                            self.model.DocumentRequestId = jsonResult.result.documentRequestId;
+                            self.model.Recipients = [];
+                            $(jsonResult.result.signatures).each(function (i, e) {
+
+                                var recipient = {
+                                    Type: "", FirstName: "", LastName: "",
+                                    Email: "", IsSigner: true, Code: null,
+                                    SignerPin: "", UserId: "", FieldName: e
+                                };
+                                self.model.Recipients.push(recipient);
+                            });
+
+                            var fileUrl = abp.appPath + 'App/Common/GetFile?id=' + jsonResult.result.id + '&contentType=' + jsonResult.result.contentType;
+                            var uploadedFile = '<a href="' + fileUrl + '" target="_blank">' + app.localize('UploadedFile') + '</a>';
+                            $("#files").html('');
+                            $("#files").append(uploadedFile);
+                            abp.message.success(app.localize('UploadedSuccessfully'));
+                        } else {
+                            abp.message.error(jsonResult.error.message);
+                        }
+                    },
+                    progressall: function (e, data) {
+                        var progress = parseInt(data.loaded / data.total * 100, 10);
+                        $('#progress .progress-bar').css(
+                            'width',
+                            progress + '%'
+                        );
+                    }
+                }).prop('disabled', !$.support.fileInput)
+                    .parent().addClass($.support.fileInput ? undefined : 'disabled');
+
+                $('#pin-modal').on('hidden.bs.modal', function (e) {
+                    self.SelectedRecipientPin = "";
+                });
+
+
+            }
+        });
+
+        $('input[type="checkbox"]').click(function () {
+            if ($(this).prop("checked") == true) {
+                $("#RecipientTable tbody").sortable({
+                    update: function (event, ui) {
+                        vm.updateOrders();
+                    }
+                });
+            }
+        });
+
+        function IsValidEmail(email) {
+            var regex =  /^([a-zA-Z0-9_\-\.]+)@@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$/;
+            if(!regex.test(email)) {
+                return false;
+            }
+            else {
+                return true;
+            }
+        }
+
+        function IsValidMobileNumber(MobileNumber) {
+            var regex = /^\d{10}$/;
+            if (!regex.test(MobileNumber)) {
+                return false;
+            }
+            else {
+                return true;
+            }
+        }
+    });
+
+
+    </script>
+}
+<div class="kt-content  kt-grid__item kt-grid__item--fluid kt-grid kt-grid--hor" id="App">
+    <div class="kt-subheader kt-grid__item">
+        <div class="@(await GetContainerClass())">
+            <div class="kt-subheader__main">
+                <h3 class="kt-subheader__title">
+                    <span>@L("DocumentRequests")</span>
+                </h3>
+                <span class="kt-subheader__separator kt-subheader__separator--v"></span>
+                <span class="kt-subheader__desc">
+                    @if (Model.IsEditMode)
+                    {
+                        @L("EditDocumentRequest");
+                    }
+                    else
+                    {
+                        @L("CreateNewDocumentRequest");
+                    }
+
+                </span>
+            </div>
+            <div class="kt-subheader__toolbar">
+                <div class="kt-subheader__wrapper">
+                    <button id="SaveDraftButton" class="btn btn-success" @@click="Save()"><i class="fa fa-save"></i> @L("Save")</button>
+                    <button id="SendButton" class="btn btn-primary blue" @@click="Send()"><i class="fas fa-paper-plane"></i> @L("Send")</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="@(await GetContainerClass()) kt-grid__item kt-grid__item--fluid">
+        <div class="kt-portlet">
+            <div class="kt-portlet__body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="kt-portlet kt-portlet--mobile">
+                            <div class="kt-portlet__head">
+                                <div class="kt-portlet__head-label">
+                                    <h3 class="kt-portlet__head-title">
+                                        @L("FileUpload")
+                                    </h3>
+                                </div>
+                            </div>
+                            <div class="kt-portlet__body">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <form id="fileuploadForm" role="form" class="kt-form">
+                                            <div class="row">
+                                                <div class="col-md-2">
+                                                    <label class="control-label">@L("Select")</label>
+                                                </div>
+                                                <div class="col-md-10">
+                                                    <div class="form-group">
+                                                        <!-- The fileinput-button span is used to style the file input field as button -->
+                                                        <span class="btn btn-primary fileinput-button">
+                                                            <i class="glyphicon glyphicon-plus"></i>
+                                                            <span>@L("Select") ...</span>
+                                                            <!-- The file input field used as target for the file upload widget -->
+                                                            <input id="fileupload" type="file" name="files">
+                                                        </span>
+                                                        <br>
+                                                        <br>
+                                                        <!-- The global progress bar -->
+                                                        <div id="progress" class="progress">
+                                                            <div class="progress-bar progress-bar-success"></div>
+                                                        </div>
+                                                        <!-- The container for the uploaded files -->
+                                                        <div id="files" class="files">
+                                                            <a v-if="model.IsEditMode" :href="baseFileUrl + 'App/Common/GetFile?id='+model.BinaryObjectId+'&contentType='+model.BinaryObjectContentType" target="_blank">@L("UploadedFile")</a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <h5>@L("SingaturesAndCCs")</h5>
+                                        <div class="table-responsive">
+                                            <table class="table table-striped table-hover" id="RecipientTable">
+                                                <thead>
+                                                    <tr v-show="model.Recipients && model.Recipients.length > 0">
+                                                        <th colspan="11">
+                                                            <input class="float-right" type="checkbox" v-model="model.IsSigningOrdered" style="margin: 8px;" />
+                                                            <label class="float-right" style="margin-top: 4px;">@L("IsSigningOrdered")</label>&#160;
+                                                        </th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody v-if="model.Recipients && model.Recipients.length > 0">
+                                                    <tr v-for="(Recipient,index) in model.Recipients" :id="`Recipient-${index}`">
+                                                        <td>
+                                                            <div class="row">
+                                                                <div class="col-md-1 mb-1 move" style="cursor:pointer" v-if="model.IsSigningOrdered">
+                                                                    <i class="fa fa-arrows-alt"></i>
+                                                                </div>
+                                                                <div class="col-md-3 mb-3">
+                                                                    <div v-if="Recipient.FieldName">
+                                                                        <label for="FieldName"> @L("FieldName")</label>
+                                                                        <input type="text" v-model="Recipient.FieldName" class="form-control" disabled />
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-3 mb-3">
+                                                                    <label for="FieldName">    @L("UserType") <span style="color:red;">*</span></label>
+                                                                    <select class="form-control" v-model="Recipient.Type" @@change="FillUsers(Recipient.Type)">
+                                                                        <option value="">@L("Select")</option>
+                                                                        <option value="@((int)RecipientType.Me)">@L("Enum_RecipientType_0")</option>
+                                                                        <option value="@((int)RecipientType.External)">@L("Enum_RecipientType_1")</option>
+                                                                        <option value="@((int)RecipientType.Internal)">@L("Enum_RecipientType_2")</option>
+                                                                    </select>
+                                                                </div>
+                                                                <div class="col-md-3 mb-3" v-show="Recipient.Type == @((int)RecipientType.Internal)">
+                                                                    <label> @L("User") <span style="color:red;">*</span></label>
+                                                                    <select class="form-control user-id-ddl" v-model="Recipient.UserId" v-select="Recipient.UserId">
+                                                                        <option value="">@L("Select")</option>
+                                                                    </select>
+                                                                </div>
+                                                                <div class="col-md-3 mb-3" v-show="Recipient.Type == @((int)RecipientType.External)">
+                                                                    <div v-show="Recipient.Type == @((int)RecipientType.External)">
+                                                                        <label>
+                                                                            @L("FirstName") <span style="color:red;">*</span>
+                                                                        </label>
+                                                                        <input type="text" class="form-control" v-model="Recipient.FirstName" />
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-3 mb-3" v-if="Recipient.Type == @((int)RecipientType.External)">
+                                                                    <label>
+                                                                        @L("LastName") <span style="color:red;">*</span>
+                                                                    </label>
+                                                                    <input type="text" class="form-control" v-model="Recipient.LastName" />
+                                                                </div>
+                                                                <div class="col-md-3 mb-3" v-show="Recipient.Type == @((int)RecipientType.External)">
+                                                                    <label>
+                                                                        @L("Email") <span style="color:red;">*</span>
+                                                                    </label>
+                                                                    <input type="text" class="form-control" v-model="Recipient.Email" />
+                                                                </div>
+                                                                <div class="col-md-3 mb-3" v-show="Recipient.Type == @((int)RecipientType.External)">
+                                                                    <label>
+                                                                        @L("Mobile") <span style="color:red;">*</span>
+                                                                    </label>
+                                                                    <input type="text" class="form-control" v-model="Recipient.MobileNumber" />
+                                                                </div>
+                                                                <div class="col-md-3 mb-3" style="display:none;">
+                                                                    <button type="button" class="btn btn-sm btn-default" @@click="OpenPin(index)"><i class="fas fa-lock"></i></button>
+                                                                </div>
+                                                                <div class="col-md-3 mb-3" v-show="!Recipient.FieldName">
+                                                                    <label>&nbsp;</label>
+                                                                    <button style="margin-top: 27px;" type="button" class="btn btn-sm btn-danger" @@click="OpenDeleteConfirmation(index)">
+                                                                        <i class="fas fa-trash"></i>
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                                <tbody v-else>
+                                                    <tr>
+                                                        <td>@L("NoData")</td>
+                                                    </tr>
+                                                </tbody>
+                                                <tfoot v-if="model.Recipients && model.Recipients.length > 0">
+                                                    <tr>
+                                                        <td>
+                                                            <div class="row">
+                                                                <div class="col-md-3 mb-3">
+                                                                    <button type="button" class="btn btn-sm btn-success" @@click="AddNewRecipient()">@L("AddNew")</button>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                </tfoot>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <hr />
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="card">
+                                            <div class="card-header bg-default">
+                                                <i class="fas fa-envelope-open"></i> <span>@L("TitleAndMessage")</span>
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <div class="form-group">
+                                                            <label>@L("DocumentTitle")</label>
+                                                            <input type="text" class="form-control" v-model="model.DocumentTitle" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-12">
+                                                        <div class="form-group">
+                                                            <label>@L("Message")</label>
+                                                            <textarea class="form-control" v-model="model.MessageBody"></textarea>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal fade" id="pin-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">@L("Pin")</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label>@L("Pin")</label>
+                                            <input type="text" class="form-control" v-model="SelectedRecipientPin" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-primary" @@click="SaveRecipientPin()">Save changes</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

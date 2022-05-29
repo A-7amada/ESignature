@@ -1,0 +1,217 @@
+﻿@using BTIT.EPM.Authorization
+@using BTIT.EPM.Web.Areas.App.Models.Recipients
+@using BTIT.EPM.Web.Areas.App.Startup
+@model RecipientsViewModel
+@{
+    ViewBag.CurrentPageName = AppPageNames.Tenant.Recipients;
+}
+@section Scripts
+{
+    <script abp-src="/view-resources/Areas/App/Views/Recipients/Index.js" asp-append-version="true"></script>
+}
+<div class="kt-content  kt-grid__item kt-grid__item--fluid kt-grid kt-grid--hor">
+ <div class="kt-subheader kt-grid__item">
+  <div class="@(await GetContainerClass())">
+    <div class="kt-subheader__main">
+        <h3 class="kt-subheader__title">
+            <span>@L("Recipients")</span>
+        </h3>
+        <span class="kt-subheader__separator kt-subheader__separator--v"></span>
+        <span class="kt-subheader__desc">
+            @L("RecipientsHeaderInfo")
+        </span>
+    </div>
+    <div class="kt-subheader__toolbar">
+        <div class="kt-subheader__wrapper">
+            <button id="ExportToExcelButton" class="btn btn-outline-success"><i class="fa fa-file-excel"></i> @L("ExportToExcel")</button>
+            @if (IsGranted(AppPermissions.Pages_Recipients_Create))
+            {
+                <button id="CreateNewRecipientButton" class="btn btn-primary blue"><i class="fa fa-plus"></i> @L("CreateNewRecipient")</button>
+            }
+        </div>
+    </div>
+  </div>
+</div>
+<div class="@(await GetContainerClass()) kt-grid__item kt-grid__item--fluid">
+    <div class="kt-portlet kt-portlet--mobile">
+        <div class="kt-portlet__body">
+            <div class="kt-form">
+                <div class="row align-items-center mb-4">
+                    <div class="col-xl-12">
+                        <div class="form-group align-items-center">
+                            <div class="input-group">
+                                <input type="text" id="RecipientsTableFilter" class="form-control m-input" placeholder="@L("SearchWithThreeDot")" value="@Model.FilterText">
+                                <span class="input-group-btn">
+                                    <button id="GetRecipientsButton" class="btn btn-primary" type="submit"><i class="flaticon-search-1"></i></button>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+			</div>
+                <div id="AdvacedAuditFiltersArea" style="display: none" class="row mb-4">
+                    <div class="col-md-12">
+						<div class="kt-separator kt-separator--border-dashed"></div>
+					</div>
+
+							<div class="col-md-3">
+								<label for="TypeFilterId">@L("Type")</label>
+								<select class="form-control" name="TypeFilter" id="TypeFilterId">
+								<option value="-1">@L("All")</option>
+																			<option value="0">@L("Enum_RecipientType_0")</option>
+
+										<option value="1">@L("Enum_RecipientType_1")</option>
+
+										<option value="2">@L("Enum_RecipientType_2")</option>
+
+
+								</select>
+                            </div>
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="FirstNameFilterId">@L("FirstName")</label>
+									<input type="text" class="form-control" name="firstNameFilter" id="FirstNameFilterId">
+								</div>
+                            </div>
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="LastNameFilterId">@L("LastName")</label>
+									<input type="text" class="form-control" name="lastNameFilter" id="LastNameFilterId">
+								</div>
+                            </div>
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="EmailFilterId">@L("Email")</label>
+									<input type="text" class="form-control" name="emailFilter" id="EmailFilterId">
+								</div>
+                            </div>
+							<div class="col-md-3">
+								<label for="IsSignerFilterId">@L("IsSigner")</label>
+								<select class="form-control" name="IsSignerFilter" id="IsSignerFilterId">
+									<option value="-1">@L("All")</option>
+									<option value="0">@L("False")</option>
+									<option value="1">@L("True")</option>
+								</select>
+                            </div>
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="CodeFilterId">@L("Code")</label>
+									<input type="text" class="form-control" name="codeFilter" id="CodeFilterId">
+								</div>
+                            </div>
+                            <div class="col-md-3">
+                                    <div class="form-group">
+										<label for="MinViewDateFilterId">@L("ViewDateRange")</label>
+										<div class="input-group">
+											<input class="form-control m-input date-picker" type="text" placeholder="@L("MinValue")"  id="MinViewDateFilterId">
+											<span style="line-height: 40px;padding: 0 15px 0 15px;"> &mdash; </span>
+											<input class="form-control m-input date-picker" type="text" placeholder="@L("MaxValue")"  id="MaxViewDateFilterId">
+										</div>
+									</div>
+                            </div>
+                            <div class="col-md-3">
+                                    <div class="form-group">
+										<label for="MinSignatureDateFilterId">@L("SignatureDateRange")</label>
+										<div class="input-group">
+											<input class="form-control m-input date-picker" type="text" placeholder="@L("MinValue")"  id="MinSignatureDateFilterId">
+											<span style="line-height: 40px;padding: 0 15px 0 15px;"> &mdash; </span>
+											<input class="form-control m-input date-picker" type="text" placeholder="@L("MaxValue")"  id="MaxSignatureDateFilterId">
+										</div>
+									</div>
+                            </div>
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="SignerPinFilterId">@L("SignerPin")</label>
+									<input type="text" class="form-control" name="signerPinFilter" id="SignerPinFilterId">
+								</div>
+                            </div>
+							<div class="col-md-3">
+								<label for="IsSignedFilterId">@L("IsSigned")</label>
+								<select class="form-control" name="IsSignedFilter" id="IsSignedFilterId">
+									<option value="-1">@L("All")</option>
+									<option value="0">@L("False")</option>
+									<option value="1">@L("True")</option>
+								</select>
+                            </div>
+                            <div class="col-md-3">
+                                 <div class="form-group">
+									<label  for="MinSigneOrderFilterId">@L("MinMax") @L("SigneOrder")</label>
+									<div class="input-group">
+										<input type="number" class="form-control m-input" placeholder="@L("MinValue")" name="minSigneOrderFilter" id="MinSigneOrderFilterId"/>
+                                        <input type="number" class="form-control m-input" placeholder="@L("MaxValue")" name="maxSigneOrderFilter"  id="MaxSigneOrderFilterId"/>
+									</div>
+                                </div>
+                            </div>
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="FieldNameFilterId">@L("FieldName")</label>
+									<input type="text" class="form-control" name="fieldNameFilter" id="FieldNameFilterId">
+								</div>
+                            </div>
+                            <div class="col-md-3">
+                                    <div class="form-group">
+										<label for="MinSentDateFilterId">@L("SentDateRange")</label>
+										<div class="input-group">
+											<input class="form-control m-input date-picker" type="text" placeholder="@L("MinValue")"  id="MinSentDateFilterId">
+											<span style="line-height: 40px;padding: 0 15px 0 15px;"> &mdash; </span>
+											<input class="form-control m-input date-picker" type="text" placeholder="@L("MaxValue")"  id="MaxSentDateFilterId">
+										</div>
+									</div>
+                            </div>
+							<div class="col-md-3">
+								<label for="IsSentFilterId">@L("IsSent")</label>
+								<select class="form-control" name="IsSentFilter" id="IsSentFilterId">
+									<option value="-1">@L("All")</option>
+									<option value="0">@L("False")</option>
+									<option value="1">@L("True")</option>
+								</select>
+                            </div>
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="UserNameFilterId">(@L("User")) @L("Name")</label>
+									<input type="text" class="form-control" name="userNameFilter" id="UserNameFilterId">
+								</div>
+                            </div>
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="DocumentRequestDocumentTitleFilterId">(@L("DocumentRequest")) @L("DocumentTitle")</label>
+									<input type="text" class="form-control" name="documentRequestDocumentTitleFilter" id="DocumentRequestDocumentTitleFilterId">
+								</div>
+                            </div>
+
+                </div>
+                <div class="row mb-4">
+                    <div class="col-xl-12">
+                        <span id="ShowAdvancedFiltersSpan" class="text-muted clickable-item"><i class="fa fa-angle-down"></i> @L("ShowAdvancedFilters")</span>
+                        <span id="HideAdvancedFiltersSpan" class="text-muted clickable-item" style="display: none"><i class="fa fa-angle-up"></i> @L("HideAdvancedFilters")</span>
+                    </div>
+                </div>
+            <div class="row align-items-center">
+                <table id="RecipientsTable" class="display table table-striped table-bordered table-hover dt-responsive nowrap">
+                    <thead>
+                        <tr>
+                            <th>@L("Actions")</th>
+								<th>@L("Type")</th>
+								<th>@L("FirstName")</th>
+								<th>@L("LastName")</th>
+								<th>@L("Email")</th>
+								<th>@L("IsSigner")</th>
+								<th>@L("Code")</th>
+								<th>@L("ViewDate")</th>
+								<th>@L("SignatureDate")</th>
+								<th>@L("SignerPin")</th>
+								<th>@L("IsSigned")</th>
+								<th>@L("SigneOrder")</th>
+								<th>@L("FieldName")</th>
+								<th>@L("SentDate")</th>
+								<th>@L("IsSent")</th>
+								<th>@L("UserName")</th>
+								<th>@L("DocumentRequestDocumentTitle")</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+  </div>
+</div>

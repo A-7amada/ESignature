@@ -1,0 +1,33 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="..\..\common.props"></Import>
+  <PropertyGroup Label="Globals">
+    <SccProjectName>SAK</SccProjectName>
+    <SccProvider>SAK</SccProvider>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccLocalPath>SAK</SccLocalPath>
+  </PropertyGroup>
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <AssetTargetFallback>$(AssetTargetFallback);portable-net45+win8+wp8+wpa81;</AssetTargetFallback>
+    <AssemblyName>BTIT.EPM.Application</AssemblyName>
+    <PackageId>BTIT.EPM.Application</PackageId>
+    <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
+    <GenerateAssemblyDescriptionAttribute>false</GenerateAssemblyDescriptionAttribute>
+    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
+    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
+    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
+    <RootNamespace>BTIT.EPM</RootNamespace>
+    <LangVersion>7.2</LangVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Abp.EntityFrameworkCore.EFPlus" Version="5.4.0" />
+    <PackageReference Include="EPPlus" Version="4.5.3.3" />
+    <PackageReference Include="NPOI" Version="2.4.1" />
+    <PackageReference Include="Syncfusion.Pdf.Net.Core" Version="18.1.0.42" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\BTIT.EPM.Application.Shared\BTIT.EPM.Application.Shared.csproj" />
+    <ProjectReference Include="..\BTIT.EPM.Core\BTIT.EPM.Core.csproj" />
+    <ProjectReference Include="..\BTIT.EPM.EntityFrameworkCore\BTIT.EPM.EntityFrameworkCore.csproj" />
+  </ItemGroup>
+</Project>

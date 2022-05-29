@@ -1,0 +1,62 @@
+﻿@using BTIT.EPM.Web.Areas.App.Models.DocumentRequests
+@using BTIT.EPM.Web.Areas.App.Startup
+@model DocumentRequestAuditTrailsForViewModel
+@{
+    ViewBag.CurrentPageName = AppPageNames.Tenant.DocumentRequests;
+}
+<div class="kt-content  kt-grid__item kt-grid__item--fluid kt-grid kt-grid--hor">
+
+    <div class="kt-subheader kt-grid__item">
+        <div class="@(await GetContainerClass())">
+            <div class="kt-subheader__main">
+                <h3 class="kt-subheader__title">
+                    <span>@L("DocumentRequests")</span>
+                </h3>
+            </div>
+        </div>
+    </div>
+
+    <div class="@(await GetContainerClass()) kt-grid__item kt-grid__item--fluid">
+        <div class="col-lg-12 alert alert-success alert-dismissable">
+            @L("DocumentSentBy")  @Model.FileName
+        </div>
+        <div class="kt-portlet kt-portlet--mobile">
+            <div class="kt-portlet__head">
+                <div class="kt-portlet__head-label">
+                    <h3 class="kt-portlet__head-title">
+                        @L("DocumentDetails")
+                    </h3>
+                </div>
+            </div>
+            <div class="kt-portlet__body">
+                <div class="kt-widget13">
+                    <div class="kt-widget13__item">
+                        <span class="kt-widget13__desc">
+                            @L("DocumentTitle"):
+                        </span>
+                        <span class="kt-widget13__text kt-widget13__text--bold">
+                            @Model.DocumentRequestDocumentTitle
+                        </span>
+                    </div>
+                    <div class="kt-widget13__item">
+                        <span class="kt-widget13__desc kt-align-right">
+                            @L("FileName"):
+                        </span>
+                        <span class="kt-widget13__text kt-widget13__text--bold">
+                            <a href='/App/Common/GetFile?id=@Model.DocumentId&contentType=application/pdf' target='blank'>  @Model.FileName </a>
+                        </span>
+                    </div>
+                    <div class="kt-widget13__item">
+                        <span class="kt-widget13__desc">
+                            @L("Status"):
+                        </span>
+                        <span class="kt-widget13__text kt-widget13__text--bold">
+                            @L("Enum_DocumentRequestStatus_" + (int)Model.Status)
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @await Html.PartialAsync("_DocumentAuditTrail", Model.DocumentRequestAuditTrailForViewDetailsDto)
+    </div>
+</div>

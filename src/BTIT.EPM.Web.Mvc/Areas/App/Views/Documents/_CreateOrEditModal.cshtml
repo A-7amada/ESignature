@@ -1,0 +1,64 @@
+﻿
+@using System.Globalization
+@using BTIT.EPM.Web.Areas.App.Models.Common.Modals
+@using BTIT.EPM.Web.Areas.App.Models.Documents
+@model CreateOrEditDocumentModalViewModel
+
+@await Html.PartialAsync("~/Areas/App/Views/Common/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel(Model.IsEditMode ? (L("EditDocument")) : L("CreateNewDocument")))
+
+<div class="modal-body">
+        <div id="DocumentInformationsTab">
+            <form name="DocumentInformationsForm" role="form" novalidate class="form-validation">
+
+                @if (Model.IsEditMode)
+                {
+                    <input type="hidden" name="id" value="@Model.Document.Id" />
+                }
+
+				            
+						<div class="form-group">
+							<label for="binaryObjectId">@L("BinaryObject")</label>
+							@Html.DropDownList("binaryObjectId", new SelectList(Model.DocumentBinaryObjectList,"Id","DisplayName", (Model.IsEditMode ? Model.Document.BinaryObjectId.ToString() : "")),@L("SelectABinaryObject"), new { @class = "form-control" })
+						</div>
+            
+						<div class="form-group">
+							<label for="documentRequestId">@L("DocumentRequest")</label>
+							@Html.DropDownList("documentRequestId", new SelectList(Model.DocumentDocumentRequestList,"Id","DisplayName", (Model.IsEditMode ? Model.Document.DocumentRequestId.ToString() : "")),@L("SelectADocumentRequest"), new { @class = "form-control" })
+						</div>
+
+
+				
+								<div class="form-group">
+									<label for="Document_FileName">@L("FileName")</label>
+									<input class="form-control" id="Document_FileName" value="@Model.Document.FileName" type="text" name="fileName"  required  maxlength="@BTIT.EPM.Documents.DocumentConsts.MaxFileNameLength"  minlength="@BTIT.EPM.Documents.DocumentConsts.MinFileNameLength"  />
+								</div>
+					
+								<div class="form-group">
+									<label for="Document_Extension">@L("Extension")</label>
+									<input class="form-control" id="Document_Extension" value="@Model.Document.Extension" type="text" name="extension"   maxlength="@BTIT.EPM.Documents.DocumentConsts.MaxExtensionLength"  minlength="@BTIT.EPM.Documents.DocumentConsts.MinExtensionLength"  />
+								</div>
+					
+								<div class="form-group">
+									<label for="Document_Size">@L("Size")</label>
+									<input class="form-control m-input" id="Document_Size" value="@Model.Document.Size.ToString(CultureInfo.InvariantCulture)" type="number" name="size"  min="@BTIT.EPM.Documents.DocumentConsts.MinSizeValue"  max="@BTIT.EPM.Documents.DocumentConsts.MaxSizeValue"/>
+								</div>
+					
+								<div class="form-group">
+									<label for="Document_ContentType">@L("ContentType")</label>
+									<input class="form-control" id="Document_ContentType" value="@Model.Document.ContentType" type="text" name="contentType"   maxlength="@BTIT.EPM.Documents.DocumentConsts.MaxContentTypeLength"  minlength="@BTIT.EPM.Documents.DocumentConsts.MinContentTypeLength"  />
+								</div>
+					
+								<div class="m-checkbox-list">
+									<label for="Document_IsActive" class="kt-checkbox">
+										<input id="Document_IsActive" type="checkbox" name="isActive" value="true" @Html.Raw(Model.Document.IsActive ?"checked=\"checked\"":"") />
+										@L("IsActive")
+										<span></span>
+									</label>
+								</div>
+					
+
+            </form>
+        </div>
+</div>
+
+@await Html.PartialAsync("~/Areas/App/Views/Common/Modals/_ModalFooterWithSaveAndCancel.cshtml")

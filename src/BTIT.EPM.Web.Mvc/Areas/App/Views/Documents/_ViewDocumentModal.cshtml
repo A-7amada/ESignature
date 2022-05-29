@@ -1,0 +1,48 @@
+﻿
+@using BTIT.EPM.Web.Areas.App.Models.Common.Modals
+@using BTIT.EPM.Web.Areas.App.Models.Documents
+@model DocumentViewModel
+
+@await Html.PartialAsync("~/Areas/App/Views/Common/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel(L("Details")))
+
+<div class="modal-body">
+    <div id="DocumentInformationsTab">
+        
+        <div class="row">
+            <div class="col-6 mb-3">
+                <h6>@L("FileName") :</h6>
+                @Model.Document.FileName
+            </div>
+            <div class="col-6 mb-3">
+                <h6>@L("Extension") :</h6>
+                @Model.Document.Extension
+            </div>
+            <div class="col-6 mb-3">
+                <h6>@L("Size") :</h6>
+                @Model.Document.Size
+            </div>
+            <div class="col-6 mb-3">
+                <h6>@L("ContentType") :</h6>
+                @Model.Document.ContentType
+            </div>
+            <div class="col-6 mb-3">
+                <h6>@L("IsActive") :</h6>
+                @Model.Document.IsActive
+            </div>
+
+            <div class="col-6 mb-3">
+                <h6>(@L("BinaryObject")) @L("TenantId") :</h6>
+                @Model.BinaryObjectTenantId
+            </div>
+            <div class="col-6 mb-3">
+                <h6>(@L("DocumentRequest")) @L("DocumentTitle") :</h6>
+                @Model.DocumentRequestDocumentTitle
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+@await Html.PartialAsync("~/Areas/App/Views/Common/Modals/_ModalFooterWithClose.cshtml")
+

@@ -1,0 +1,103 @@
+﻿@using BTIT.EPM.Web.Areas.App.Startup
+@using BTIT.EPM.DigitalSignature.Dtos
+@model DocumentAuditTrailDto
+@{
+    ViewBag.CurrentPageName = AppPageNames.Tenant.DocumentRequestAuditTrails;
+}
+
+<div class="kt-subheader kt-grid__item">
+
+    <div class="kt-subheader__main">
+        <h3 class="kt-subheader__title">
+            <span>@L("DocumentRequestAuditTrails")</span>
+        </h3>
+        <span class="kt-subheader__separator kt-subheader__separator--v"></span>
+        <span class="kt-subheader__desc">
+            @Model.DocumentRequestTitle
+        </span>
+    </div>
+    <div class="kt-subheader__toolbar">
+        <div class="kt-subheader__wrapper">
+            <a id="BackToDocumentsButton" href="@Url.Action("Index","Documents")" class="btn btn-label-primary"><i class="icon-fast-backward"></i> @L("BackToDocuments")</a>
+        </div>
+    </div>
+</div>
+
+<div class="kt-content">
+    <div class="kt-portlet kt-portlet--mobile">
+        <div class="kt-portlet__body">
+
+            <h3>@L("DocumentDetails"):</h3>
+            <div class="row">
+                <div class="col-6 mb-3">
+                    <h6>@L("DocumentRequestDocumentTitle") :</h6>
+                    @Model.DocumentRequestTitle
+                </div>
+                <div class="col-6 mb-3">
+                    <h6>@L("FileName") :</h6>
+                    <a href="@Url.Action("DownloadFile","Documents",new { documentId = Model.Document.Id})">
+                        @Model.Document.FileName
+                    </a>
+                </div>
+                <div class="col-6 mb-3">
+                    <h6>@L("DocumentId") :</h6>
+                    @Model.Document.Id
+                </div>
+                <div class="col-6 mb-3">
+                    <h6>@L("Status") :</h6>
+                    @L("Enum_DocumentRequestStatus_" + (int)Model.Document.Status)
+                </div>
+            </div>
+
+        </div>
+
+        <div class="kt-portlet__body">
+
+            <h3>@L("DocumentHistory"):</h3>
+
+            <div class="row align-items-center">
+                <table id="DocumentRequestAuditTrailsTable" class="display table table-striped table-bordered table-hover dt-responsive nowrap">
+                    <thead>
+                        <tr>
+                            <th>@L("Status")</th>
+                            <th>@L("Details")</th>
+                            <th>@L("DateAndTime")</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.DocumentRequestAuditTrails != null && Model.DocumentRequestAuditTrails.Any())
+                        {
+                            foreach (var item in Model.DocumentRequestAuditTrails)
+                            {
+                                <tr>
+                                    <td>
+                                        @L("Enum_AuditTrailType_" + (int)item.Type)
+                                    </td>
+                                    <td>
+                                        @{
+                                            var details = L("Enum_AuditTrailType_" + (int)item.Type);
+                                            if (item.Type == BTIT.EPM.Lookups.AuditTrailType.Signed || item.Type == BTIT.EPM.Lookups.AuditTrailType.Viewed)
+                                            {
+                                                details += " " + L("By") + " " + item.UserName + "(" + item.UserEmail + ")";
+                                            }
+                                            else if (item.Type == BTIT.EPM.Lookups.AuditTrailType.Sent)
+                                            {
+                                                details += " " + L("To") + " " + item.UserName;
+                                            }
+                                        }
+                                        @details
+                                    </td>
+                                    <td>
+                                        @item.CreationDate
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+
+    </div>
+</div>

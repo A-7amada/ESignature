@@ -1,0 +1,36 @@
+﻿
+@using BTIT.EPM.Web.Areas.App.Models.Common.Modals
+@using BTIT.EPM.Web.Areas.App.Models.Contacts
+@model ContactViewModel
+
+@await Html.PartialAsync("~/Areas/App/Views/Common/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel(L("Details")))
+
+<div class="modal-body">
+    <div id="ContactInformationsTab">
+        
+        <div class="row">
+            <div class="col-6 mb-3">
+                <h6>@L("FirstName") :</h6>
+                @Model.Contact.FirstName
+            </div>
+            <div class="col-6 mb-3">
+                <h6>@L("LastName") :</h6>
+                @Model.Contact.LastName
+            </div>
+            <div class="col-6 mb-3">
+                <h6>@L("Email") :</h6>
+                @Model.Contact.Email
+            </div>
+            <div class="col-6 mb-3">
+                <h6>@L("PhoneNumber") :</h6>
+                @Model.Contact.PhoneNumber
+            </div>
+
+
+        </div>
+
+    </div>
+</div>
+
+@await Html.PartialAsync("~/Areas/App/Views/Common/Modals/_ModalFooterWithClose.cshtml")
+

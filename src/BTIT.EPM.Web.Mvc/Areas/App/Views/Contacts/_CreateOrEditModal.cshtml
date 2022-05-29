@@ -1,0 +1,46 @@
+﻿
+@using System.Globalization
+@using BTIT.EPM.Web.Areas.App.Models.Common.Modals
+@using BTIT.EPM.Web.Areas.App.Models.Contacts
+@model CreateOrEditContactModalViewModel
+
+@await Html.PartialAsync("~/Areas/App/Views/Common/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel(Model.IsEditMode ? (L("EditContact")) : L("CreateNewContact")))
+
+<div class="modal-body">
+        <div id="ContactInformationsTab">
+            <form name="ContactInformationsForm" role="form" novalidate class="form-validation">
+
+                @if (Model.IsEditMode)
+                {
+                    <input type="hidden" name="id" value="@Model.Contact.Id" />
+                }
+
+				
+
+				
+								<div class="form-group">
+									<label for="Contact_FirstName">@L("FirstName")</label>
+									<input class="form-control" id="Contact_FirstName" value="@Model.Contact.FirstName" type="text" name="firstName"   maxlength="@BTIT.EPM.DigitalSignature.ContactConsts.MaxFirstNameLength"  minlength="@BTIT.EPM.DigitalSignature.ContactConsts.MinFirstNameLength"  />
+								</div>
+					
+								<div class="form-group">
+									<label for="Contact_LastName">@L("LastName")</label>
+									<input class="form-control" id="Contact_LastName" value="@Model.Contact.LastName" type="text" name="lastName"   maxlength="@BTIT.EPM.DigitalSignature.ContactConsts.MaxLastNameLength"  minlength="@BTIT.EPM.DigitalSignature.ContactConsts.MinLastNameLength"  />
+								</div>
+					
+								<div class="form-group">
+									<label for="Contact_Email">@L("Email")</label>
+									<input class="form-control" id="Contact_Email" value="@Model.Contact.Email" type="text" name="email"   maxlength="@BTIT.EPM.DigitalSignature.ContactConsts.MaxEmailLength"  minlength="@BTIT.EPM.DigitalSignature.ContactConsts.MinEmailLength"  pattern="@BTIT.EPM.DigitalSignature.ContactConsts.EmailRegex" />
+								</div>
+					
+								<div class="form-group">
+									<label for="Contact_PhoneNumber">@L("PhoneNumber")</label>
+									<input class="form-control" id="Contact_PhoneNumber" value="@Model.Contact.PhoneNumber" type="text" name="phoneNumber"   maxlength="@BTIT.EPM.DigitalSignature.ContactConsts.MaxPhoneNumberLength"  minlength="@BTIT.EPM.DigitalSignature.ContactConsts.MinPhoneNumberLength"  pattern="@BTIT.EPM.DigitalSignature.ContactConsts.PhoneNumberRegex" />
+								</div>
+					
+
+            </form>
+        </div>
+</div>
+
+@await Html.PartialAsync("~/Areas/App/Views/Common/Modals/_ModalFooterWithSaveAndCancel.cshtml")

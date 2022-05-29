@@ -1,0 +1,84 @@
+﻿
+@using BTIT.EPM.Web.Areas.App.Models.Common.Modals
+@using BTIT.EPM.Web.Areas.App.Models.Recipients
+@model RecipientViewModel
+
+@await Html.PartialAsync("~/Areas/App/Views/Common/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel(L("Details")))
+
+<div class="modal-body">
+    <div id="RecipientInformationsTab">
+        
+        <div class="row">
+            <div class="col-6 mb-3">
+                <h6>@L("Type") :</h6>
+                @L("Enum_RecipientType_" + (int)Model.Recipient.Type)
+            </div>
+            <div class="col-6 mb-3">
+                <h6>@L("FirstName") :</h6>
+                @Model.Recipient.FirstName
+            </div>
+            <div class="col-6 mb-3">
+                <h6>@L("LastName") :</h6>
+                @Model.Recipient.LastName
+            </div>
+            <div class="col-6 mb-3">
+                <h6>@L("Email") :</h6>
+                @Model.Recipient.Email
+            </div>
+            <div class="col-6 mb-3">
+                <h6>@L("IsSigner") :</h6>
+                @Model.Recipient.IsSigner
+            </div>
+            <div class="col-6 mb-3">
+                <h6>@L("Code") :</h6>
+                @Model.Recipient.Code
+            </div>
+            <div class="col-6 mb-3">
+                <h6>@L("ViewDate") :</h6>
+                @Model.Recipient.ViewDate
+            </div>
+            <div class="col-6 mb-3">
+                <h6>@L("SignatureDate") :</h6>
+                @Model.Recipient.SignatureDate
+            </div>
+            <div class="col-6 mb-3">
+                <h6>@L("SignerPin") :</h6>
+                @Model.Recipient.SignerPin
+            </div>
+            <div class="col-6 mb-3">
+                <h6>@L("IsSigned") :</h6>
+                @Model.Recipient.IsSigned
+            </div>
+            <div class="col-6 mb-3">
+                <h6>@L("SigneOrder") :</h6>
+                @Model.Recipient.SigneOrder
+            </div>
+            <div class="col-6 mb-3">
+                <h6>@L("FieldName") :</h6>
+                @Model.Recipient.FieldName
+            </div>
+            <div class="col-6 mb-3">
+                <h6>@L("SentDate") :</h6>
+                @Model.Recipient.SentDate
+            </div>
+            <div class="col-6 mb-3">
+                <h6>@L("IsSent") :</h6>
+                @Model.Recipient.IsSent
+            </div>
+
+            <div class="col-6 mb-3">
+                <h6>(@L("User")) @L("Name") :</h6>
+                @Model.UserName
+            </div>
+            <div class="col-6 mb-3">
+                <h6>(@L("DocumentRequest")) @L("DocumentTitle") :</h6>
+                @Model.DocumentRequestDocumentTitle
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+@await Html.PartialAsync("~/Areas/App/Views/Common/Modals/_ModalFooterWithClose.cshtml")
+

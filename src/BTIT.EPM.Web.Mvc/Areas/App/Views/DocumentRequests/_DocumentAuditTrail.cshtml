@@ -1,0 +1,153 @@
+﻿@using BTIT.EPM.DigitalSignature.Dtos
+@using BTIT.EPM.Lookups
+@model List<GetDocumentRequestAuditTrailForViewDetailsDto>
+
+<div class="kt-portlet kt-portlet--mobile">
+    <div class="kt-portlet__head">
+        <div class="kt-portlet__head-label">
+            <h3 class="kt-portlet__head-title">
+                @L("DocumentHistory")
+            </h3>
+        </div>
+    </div>
+
+    <div class="kt-portlet__body">
+        <div class="kt-notes">
+            <div class="kt-notes__items">
+                @foreach (var item in Model)
+                {
+                    @if (item.Type == AuditTrailType.Completed)
+                    {
+                        <div class="kt-notes__item">
+                            <div class="kt-notes__media">
+                                <span class="kt-notes__icon kt-notes__icon--danger kt-font-boldest">
+                                    <i class="flaticon2-file kt-font-danger"></i>
+                                </span>
+                            </div>
+                            <div class="kt-notes__content">
+                                <div class="kt-notes__section">
+                                    <div class="kt-notes__info">
+                                        <a href="#" class="kt-notes__title">
+                                            @L("DocumentCompleted")
+                                        </a>
+                                        <span class="kt-notes__desc">
+                                            @item.CreationTime
+                                        </span>
+                                    </div>
+                                </div>
+                                <span class="kt-notes__body">
+                                    @L("documenthasbeencompleted")
+                                </span>
+                            </div>
+                        </div>
+                    }
+                    @if (item.Type == AuditTrailType.Signed)
+                    {
+                        <div class="kt-notes__item">
+                            <div class="kt-notes__media">
+                                <span class="kt-notes__icon kt-notes__icon--danger kt-font-boldest">
+                                    <i class="flaticon2-writing kt-font-danger"></i>
+                                </span>
+                            </div>
+                            <div class="kt-notes__content">
+                                <div class="kt-notes__section">
+                                    <div class="kt-notes__info">
+                                        <a href="#" class="kt-notes__title">
+                                            @L("DocumentSigned")
+                                        </a>
+                                        <span class="kt-notes__desc">
+                                            @item.CreationTime
+                                        </span>
+                                    </div>
+                                </div>
+                                <span class="kt-notes__body">
+                                    @L("DocumentSignedby") @item.RecipientName (@item.RecipientEmail)
+                                </span>
+                            </div>
+                        </div>
+                    }
+                    @if (item.Type == AuditTrailType.Viewed)
+                    {
+                        <div class="kt-notes__item">
+                            <div class="kt-notes__media">
+                                <span class="kt-notes__icon kt-notes__icon--danger kt-font-boldest">
+                                    <i class="flaticon2-open-text-book kt-font-danger"></i>
+                                </span>
+                            </div>
+                            <div class="kt-notes__content">
+                                <div class="kt-notes__section">
+                                    <div class="kt-notes__info">
+                                        <a href="#" class="kt-notes__title">
+                                            @L("DocumentViewed")
+                                        </a>
+                                        <span class="kt-notes__desc">
+                                            @item.CreationTime
+                                        </span>
+                                    </div>
+                                </div>
+                                <span class="kt-notes__body">
+                                    @L("DocumentViewedby") @item.RecipientName (@item.RecipientEmail)
+                                </span>
+                            </div>
+                        </div>
+                    }
+                    @if (item.Type == AuditTrailType.Sent)
+                    {
+                        <div class="kt-notes__item">
+                            <div class="kt-notes__media">
+                                <span class="kt-notes__icon kt-notes__icon--danger kt-font-boldest">
+                                    <i class="flaticon2-email kt-font-danger"></i>
+                                </span>
+                            </div>
+                            <div class="kt-notes__content">
+                                <div class="kt-notes__section">
+                                    <div class="kt-notes__info">
+                                        <a href="#" class="kt-notes__title">
+                                            @L("DocumentSent")
+                                        </a>
+                                        <span class="kt-notes__desc">
+                                            @item.CreationTime
+                                        </span>
+                                    </div>
+                                    <div class="kt-notes__dropdown">
+                                        <a href="#" class="btn btn-sm btn-icon-md btn-icon" data-toggle="dropdown">
+                                            <i class="flaticon2-note kt-font-brand"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                                <span class="kt-notes__body">
+                                    @L("DocumentSentTo") @item.Message
+                                </span>
+                            </div>
+                        </div>
+                    }
+                    @if (item.Type == AuditTrailType.Created)
+                    {
+                        <div class="kt-notes__item kt-notes__item">
+                            <div class="kt-notes__media">
+                                <span class="kt-notes__icon kt-notes__icon--danger kt-font-boldest">
+                                    <i class="flaticon2-file-2 kt-font-danger"></i>
+                                </span>
+                            </div>
+                            <div class="kt-notes__content">
+                                <div class="kt-notes__section">
+                                    <div class="kt-notes__info">
+                                        <a href="#" class="kt-notes__title">
+                                            @L("DocumentCreated")
+                                        </a>
+                                        <span class="kt-notes__desc">
+                                            @item.CreationTime
+                                        </span>
+                                    </div>
+                                </div>
+                                <span class="kt-notes__body">
+                                    @L("DocumentCreated")
+                                </span>
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+</div>

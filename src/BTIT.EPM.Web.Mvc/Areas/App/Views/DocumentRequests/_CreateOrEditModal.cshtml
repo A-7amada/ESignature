@@ -1,0 +1,55 @@
+﻿@using BTIT.EPM.Lookups;
+					
+@using System.Globalization
+@using BTIT.EPM.Web.Areas.App.Models.Common.Modals
+@using BTIT.EPM.Web.Areas.App.Models.DocumentRequests
+@model CreateOrEditDocumentRequestModalViewModel
+
+@await Html.PartialAsync("~/Areas/App/Views/Common/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel(Model.IsEditMode ? (L("EditDocumentRequest")) : L("CreateNewDocumentRequest")))
+
+<div class="modal-body">
+        <div id="DocumentRequestInformationsTab">
+            <form name="DocumentRequestInformationsForm" role="form" novalidate class="form-validation">
+
+                @if (Model.IsEditMode)
+                {
+                    @*<input type="hidden" name="id" value="@Model.DocumentRequest.Id" />*@
+                }
+
+				
+
+				
+								<div class="form-group">
+									<label for="DocumentRequest_DocumentTitle">@L("DocumentTitle")</label>
+									@*<input class="form-control" id="DocumentRequest_DocumentTitle" value="@Model.DocumentRequest.DocumentTitle" type="text" name="documentTitle"   maxlength="@BTIT.EPM.DigitalSignature.DocumentRequestConsts.MaxDocumentTitleLength"  minlength="@BTIT.EPM.DigitalSignature.DocumentRequestConsts.MinDocumentTitleLength"  />*@
+								</div>
+					
+								<div class="form-group">
+									<label for="DocumentRequest_MessageBody">@L("MessageBody")</label>
+									@*<input class="form-control" id="DocumentRequest_MessageBody" value="@Model.DocumentRequest.MessageBody" type="text" name="messageBody"     />*@
+								</div>
+					
+								@{
+					var selectListStatus = Html.GetEnumSelectList(typeof(DocumentRequestStatus));
+					 foreach (var selectOption in selectListStatus) { selectOption.Text = L("Enum_DocumentRequestStatus_" + selectOption.Value); }
+					}
+								<div class="form-group m-form__group">
+									<label for="DocumentRequest_Status">@L("Status")</label>
+										@*<select class="form-control m-input m-input--square" name="status" id="DocumentRequest_Status" asp-for="@Model.DocumentRequest.Status" asp-items="@selectListStatus">
+									</select>*@
+								</div>
+					
+								<div class="m-checkbox-list">
+									<label for="DocumentRequest_IsSigningOrdered" class="kt-checkbox">
+										@*<input id="DocumentRequest_IsSigningOrdered" type="checkbox" name="isSigningOrdered" value="true" @Html.Raw(Model.DocumentRequest.IsSigningOrdered ?"checked=\"checked\"":"") />*@
+										@L("IsSigningOrdered")
+										<span></span>
+									</label>
+								</div>
+					
+
+            </form>
+        </div>
+</div>
+
+@await Html.PartialAsync("~/Areas/App/Views/Common/Modals/_ModalFooterWithSaveAndCancel.cshtml")

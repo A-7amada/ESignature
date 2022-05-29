@@ -1,0 +1,32 @@
+﻿
+@using BTIT.EPM.Web.Areas.App.Models.Common.Modals
+@using BTIT.EPM.Web.Areas.App.Models.DocumentRequests
+@model DocumentRequestViewModel
+
+@await Html.PartialAsync("~/Areas/App/Views/Common/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel(L("Details")))
+
+<div class="modal-body">
+    <div id="DocumentRequestInformationsTab">
+        
+        <div class="row">
+            <div class="col-6 mb-3">
+                <h6>@L("DocumentTitle") :</h6>
+                @Model.DocumentRequest.DocumentTitle
+            </div>
+            <div class="col-6 mb-3">
+                <h6>@L("Status") :</h6>
+                @L("Enum_DocumentRequestStatus_" + (int)Model.DocumentRequest.Status)
+            </div>
+            <div class="col-6 mb-3">
+                <h6>@L("IsSigningOrdered") :</h6>
+                @Model.DocumentRequest.IsSigningOrdered
+            </div>
+
+
+        </div>
+
+    </div>
+</div>
+
+@await Html.PartialAsync("~/Areas/App/Views/Common/Modals/_ModalFooterWithClose.cshtml")
+

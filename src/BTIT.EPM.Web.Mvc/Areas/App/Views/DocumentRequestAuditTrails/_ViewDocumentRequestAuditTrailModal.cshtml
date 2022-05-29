@@ -1,0 +1,36 @@
+﻿
+@using BTIT.EPM.Web.Areas.App.Models.Common.Modals
+@using BTIT.EPM.Web.Areas.App.Models.DocumentRequestAuditTrails
+@model DocumentRequestAuditTrailViewModel
+
+@await Html.PartialAsync("~/Areas/App/Views/Common/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel(L("Details")))
+
+<div class="modal-body">
+    <div id="DocumentRequestAuditTrailInformationsTab">
+        
+        <div class="row">
+            <div class="col-6 mb-3">
+                <h6>@L("Type") :</h6>
+                @L("Enum_AuditTrailType_" + (int)Model.DocumentRequestAuditTrail.Type)
+            </div>
+            <div class="col-6 mb-3">
+                <h6>@L("ClientIpAddress") :</h6>
+                @Model.DocumentRequestAuditTrail.ClientIpAddress
+            </div>
+
+            <div class="col-6 mb-3">
+                <h6>(@L("DocumentRequest")) @L("DocumentTitle") :</h6>
+                @Model.DocumentRequestDocumentTitle
+            </div>
+            <div class="col-6 mb-3">
+                <h6>(@L("Recipient")) @L("FirstName") :</h6>
+                @Model.RecipientFirstName
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+@await Html.PartialAsync("~/Areas/App/Views/Common/Modals/_ModalFooterWithClose.cshtml")
+

@@ -1,0 +1,131 @@
+﻿@using BTIT.EPM.Lookups;
+					
+@using System.Globalization
+@using BTIT.EPM.Web.Areas.App.Models.Common.Modals
+@using BTIT.EPM.Web.Areas.App.Models.Recipients
+@model CreateOrEditRecipientModalViewModel
+
+@await Html.PartialAsync("~/Areas/App/Views/Common/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel(Model.IsEditMode ? (L("EditRecipient")) : L("CreateNewRecipient")))
+
+<div class="modal-body">
+        <div id="RecipientInformationsTab">
+            <form name="RecipientInformationsForm" role="form" novalidate class="form-validation">
+
+                @if (Model.IsEditMode)
+                {
+                    <input type="hidden" name="id" value="@Model.Recipient.Id" />
+                }
+
+				            
+						<div class="form-group">
+							<label for="userId">@L("User")</label>
+							@Html.DropDownList("userId", new SelectList(Model.RecipientUserList,"Id","DisplayName", (Model.IsEditMode ? Model.Recipient.UserId.ToString() : "")),@L("SelectAUser"), new { @class = "form-control" })
+						</div>
+            
+						<div class="form-group">
+							<label for="documentRequestId">@L("DocumentRequest")</label>
+							@Html.DropDownList("documentRequestId", new SelectList(Model.RecipientDocumentRequestList,"Id","DisplayName", (Model.IsEditMode ? Model.Recipient.DocumentRequestId.ToString() : "")),@L("SelectADocumentRequest"), new { @class = "form-control" })
+						</div>
+
+
+				
+								@{
+					var selectListType = Html.GetEnumSelectList(typeof(RecipientType));
+					 foreach (var selectOption in selectListType) { selectOption.Text = L("Enum_RecipientType_" + selectOption.Value); }
+					}
+								<div class="form-group m-form__group">
+									<label for="Recipient_Type">@L("Type")</label>
+										<select class="form-control m-input m-input--square" name="type" id="Recipient_Type" asp-for="@Model.Recipient.Type" asp-items="@selectListType">
+									</select>
+								</div>
+					
+								<div class="form-group">
+									<label for="Recipient_FirstName">@L("FirstName")</label>
+									<input class="form-control" id="Recipient_FirstName" value="@Model.Recipient.FirstName" type="text" name="firstName"   maxlength="@BTIT.EPM.DigitalSignature.RecipientConsts.MaxFirstNameLength"  minlength="@BTIT.EPM.DigitalSignature.RecipientConsts.MinFirstNameLength"  />
+								</div>
+					
+								<div class="form-group">
+									<label for="Recipient_LastName">@L("LastName")</label>
+									<input class="form-control" id="Recipient_LastName" value="@Model.Recipient.LastName" type="text" name="lastName"   maxlength="@BTIT.EPM.DigitalSignature.RecipientConsts.MaxLastNameLength"  minlength="@BTIT.EPM.DigitalSignature.RecipientConsts.MinLastNameLength"  />
+								</div>
+					
+								<div class="form-group">
+									<label for="Recipient_Email">@L("Email")</label>
+									<input class="form-control" id="Recipient_Email" value="@Model.Recipient.Email" type="text" name="email"   maxlength="@BTIT.EPM.DigitalSignature.RecipientConsts.MaxEmailLength"  minlength="@BTIT.EPM.DigitalSignature.RecipientConsts.MinEmailLength"  pattern="@BTIT.EPM.DigitalSignature.RecipientConsts.EmailRegex" />
+								</div>
+					
+								<div class="m-checkbox-list">
+									<label for="Recipient_IsSigner" class="kt-checkbox">
+										<input id="Recipient_IsSigner" type="checkbox" name="isSigner" value="true" @Html.Raw(Model.Recipient.IsSigner ?"checked=\"checked\"":"") />
+										@L("IsSigner")
+										<span></span>
+									</label>
+								</div>
+					
+								<div class="form-group">
+									<label for="Recipient_Code">@L("Code")</label>
+									<input class="form-control" id="Recipient_Code" value="@Model.Recipient.Code" type="text" name="code"     />
+								</div>
+					
+								<div class="form-group">
+									<label for="Recipient_ViewDate">@L("ViewDate")</label>
+									<input class="form-control m-input date-picker" id="Recipient_ViewDate" type="text" name="viewDate" value="@Model.Recipient.ViewDate"/>
+								</div>
+					
+								<div class="form-group">
+									<label for="Recipient_SignatureDate">@L("SignatureDate")</label>
+									<input class="form-control m-input date-picker" id="Recipient_SignatureDate" type="text" name="signatureDate" value="@Model.Recipient.SignatureDate"/>
+								</div>
+					
+								<div class="form-group">
+									<label for="Recipient_SignerPin">@L("SignerPin")</label>
+									<input class="form-control" id="Recipient_SignerPin" value="@Model.Recipient.SignerPin" type="text" name="signerPin"   maxlength="@BTIT.EPM.DigitalSignature.RecipientConsts.MaxSignerPinLength"  minlength="@BTIT.EPM.DigitalSignature.RecipientConsts.MinSignerPinLength"  />
+								</div>
+					
+								<div class="m-checkbox-list">
+									<label for="Recipient_IsSigned" class="kt-checkbox">
+										<input id="Recipient_IsSigned" type="checkbox" name="isSigned" value="true" @Html.Raw(Model.Recipient.IsSigned ?"checked=\"checked\"":"") />
+										@L("IsSigned")
+										<span></span>
+									</label>
+								</div>
+					
+								<div class="form-group">
+									<label for="Recipient_SigneOrder">@L("SigneOrder")</label>
+									<input class="form-control m-input" id="Recipient_SigneOrder" value="@Model.Recipient.SigneOrder.ToString(CultureInfo.InvariantCulture)" type="number" name="signeOrder"  />
+								</div>
+					
+								<div class="form-group">
+									<label for="Recipient_FieldName">@L("FieldName")</label>
+									<input class="form-control" id="Recipient_FieldName" value="@Model.Recipient.FieldName" type="text" name="fieldName"   maxlength="@BTIT.EPM.DigitalSignature.RecipientConsts.MaxFieldNameLength"  minlength="@BTIT.EPM.DigitalSignature.RecipientConsts.MinFieldNameLength"  />
+								</div>
+					
+								<div class="form-group">
+									<label for="Recipient_SignerPinExpiry">@L("SignerPinExpiry")</label>
+									<input class="form-control m-input date-picker" id="Recipient_SignerPinExpiry" type="text" name="signerPinExpiry" value="@Model.Recipient.SignerPinExpiry"/>
+								</div>
+					
+								<div class="form-group">
+									<label for="Recipient_MobileNumber">@L("MobileNumber")</label>
+									<input class="form-control" id="Recipient_MobileNumber" value="@Model.Recipient.MobileNumber" type="text" name="mobileNumber"   maxlength="@BTIT.EPM.DigitalSignature.RecipientConsts.MaxMobileNumberLength"  minlength="@BTIT.EPM.DigitalSignature.RecipientConsts.MinMobileNumberLength"  pattern="@BTIT.EPM.DigitalSignature.RecipientConsts.MobileNumberRegex" />
+								</div>
+					
+								<div class="form-group">
+									<label for="Recipient_SentDate">@L("SentDate")</label>
+									<input class="form-control m-input date-picker" id="Recipient_SentDate" type="text" name="sentDate" value="@Model.Recipient.SentDate"/>
+								</div>
+					
+								<div class="m-checkbox-list">
+									<label for="Recipient_IsSent" class="kt-checkbox">
+										<input id="Recipient_IsSent" type="checkbox" name="isSent" value="true" @Html.Raw(Model.Recipient.IsSent ?"checked=\"checked\"":"") />
+										@L("IsSent")
+										<span></span>
+									</label>
+								</div>
+					
+
+            </form>
+        </div>
+</div>
+
+@await Html.PartialAsync("~/Areas/App/Views/Common/Modals/_ModalFooterWithSaveAndCancel.cshtml")

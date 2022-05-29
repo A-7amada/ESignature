@@ -1,0 +1,52 @@
+﻿@using BTIT.EPM.Lookups;
+					
+@using System.Globalization
+@using BTIT.EPM.Web.Areas.App.Models.Common.Modals
+@using BTIT.EPM.Web.Areas.App.Models.DocumentRequestAuditTrails
+@model CreateOrEditDocumentRequestAuditTrailModalViewModel
+
+@await Html.PartialAsync("~/Areas/App/Views/Common/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel(Model.IsEditMode ? (L("EditDocumentRequestAuditTrail")) : L("CreateNewDocumentRequestAuditTrail")))
+
+<div class="modal-body">
+        <div id="DocumentRequestAuditTrailInformationsTab">
+            <form name="DocumentRequestAuditTrailInformationsForm" role="form" novalidate class="form-validation">
+
+                @if (Model.IsEditMode)
+                {
+                    <input type="hidden" name="id" value="@Model.DocumentRequestAuditTrail.Id" />
+                }
+
+				            
+						<div class="form-group">
+							<label for="documentRequestId">@L("DocumentRequest")</label>
+							@Html.DropDownList("documentRequestId", new SelectList(Model.DocumentRequestAuditTrailDocumentRequestList,"Id","DisplayName", (Model.IsEditMode ? Model.DocumentRequestAuditTrail.DocumentRequestId.ToString() : "")),@L("SelectADocumentRequest"), new { @class = "form-control" })
+						</div>
+            
+						<div class="form-group">
+							<label for="recipientId">@L("Recipient")</label>
+							@Html.DropDownList("recipientId", new SelectList(Model.DocumentRequestAuditTrailRecipientList,"Id","DisplayName", (Model.IsEditMode ? Model.DocumentRequestAuditTrail.RecipientId.ToString() : "")),@L("SelectARecipient"), new { @class = "form-control" })
+						</div>
+
+
+				
+								@{
+					var selectListType = Html.GetEnumSelectList(typeof(AuditTrailType));
+					 foreach (var selectOption in selectListType) { selectOption.Text = L("Enum_AuditTrailType_" + selectOption.Value); }
+					}
+								<div class="form-group m-form__group">
+									<label for="DocumentRequestAuditTrail_Type">@L("Type")</label>
+										<select class="form-control m-input m-input--square" name="type" id="DocumentRequestAuditTrail_Type" asp-for="@Model.DocumentRequestAuditTrail.Type" asp-items="@selectListType">
+									</select>
+								</div>
+					
+								<div class="form-group">
+									<label for="DocumentRequestAuditTrail_ClientIpAddress">@L("ClientIpAddress")</label>
+									<input class="form-control" id="DocumentRequestAuditTrail_ClientIpAddress" value="@Model.DocumentRequestAuditTrail.ClientIpAddress" type="text" name="clientIpAddress"   maxlength="@BTIT.EPM.DigitalSignature.DocumentRequestAuditTrailConsts.MaxClientIpAddressLength"  minlength="@BTIT.EPM.DigitalSignature.DocumentRequestAuditTrailConsts.MinClientIpAddressLength"  />
+								</div>
+					
+
+            </form>
+        </div>
+</div>
+
+@await Html.PartialAsync("~/Areas/App/Views/Common/Modals/_ModalFooterWithSaveAndCancel.cshtml")

@@ -1,0 +1,147 @@
+﻿@using BTIT.EPM.Web.Areas.App.Models.DocumentRequests
+@using BTIT.EPM.Web.Areas.App.Models.Recipients
+@using BTIT.EPM.Web.Areas.App.Startup
+@using BTIT.EPM.Authorization
+@{
+    @if (!string.IsNullOrWhiteSpace(Model.ViewAndSignDocumentEmailViewModel.SignerPin))
+        Layout = "~/Areas/App/Views/Layout/Default/_Layout_Anonymous.cshtml";
+}
+@model ViewAndSignDocumentViewModel
+@{
+    ViewBag.CurrentPageName = AppPageNames.Tenant.ViewAndSignDocument;
+}
+
+@section Scripts
+    {
+    <script abp-src="/view-resources/Areas/App/Views/DocumentRequests/ViewAndSignDocument.js" asp-append-version="true"></script>
+}
+
+<style>
+   .swal-overlay.swal-overlay--show-modal {
+       background-color: rgba(190, 182, 182, 0.5);
+       backdrop-filter: blur(10px);
+   }
+
+   .kt-subheader {
+       position: static !important;
+       margin-left: 27px !important;
+       margin-right: 25px !important;
+       padding: 0.25rem 0;
+   }
+
+   .kt-content {
+        padding: 0px 0 !important;
+    }
+
+   .kt-subheader .btn {
+       margin-top: 8px;
+   }
+</style>
+
+<div class="kt-content  kt-grid__item kt-grid__item--fluid kt-grid kt-grid--hor">
+    <input type="hidden" name="PinCode" id="PinCode" value="@Model.ViewAndSignDocumentEmailViewModel.SignerPin" />
+    <input type="hidden" name="RecipientId" id="RecipientId" value="@Model.ViewAndSignDocumentEmailViewModel.RecipientId" />
+    <input type="hidden" name="DocumentRequestId" id="DocumentRequestId" value="@Model.ViewAndSignDocumentEmailViewModel.DocumentRequestId" />
+    <input type="hidden" name="RecipientCode" id="RecipientCode" value="@Model.ViewAndSignDocumentEmailViewModel.RecipientCode" />
+
+    <div class="kt-subheader kt-grid__item">
+        <div class="@(await GetContainerClass()) kt-grid__item kt-grid__item--fluid">
+            <div class="kt-subheader__main">
+                <h3 class="kt-subheader__title">
+                    <span>@L("ViewAndSignDocument")</span>
+                </h3>
+            </div>
+                 @if (Model.ShowSignButton)
+                 {
+                     <button id="CreateNewContactButton" class="SignButton btn btn-primary blue"> @L("SignDocument")</button>
+                 }
+        </div>
+    </div>
+    <br />
+    <div class="@(await GetContainerClass()) kt-grid__item kt-grid__item--fluid">
+        <div class="kt-portlet kt-portlet--mobile">
+            <div class="kt-portlet__head">
+                <div class="kt-portlet__head-label">
+                    <h3 class="kt-portlet__head-title">
+                        @L("DocumentDetails")
+                    </h3>
+                </div>
+            </div>
+            <div class="kt-portlet__body">
+                <div class="kt-widget13">
+                    <div class="kt-widget13__item">
+                        <span class="kt-widget13__desc">
+                            @L("DocumentTitle"):
+                        </span>
+                        <span class="kt-widget13__text kt-widget13__text--bold">
+                            @Model.DocumentRequestAuditTrailsForViewModel.DocumentRequestDocumentTitle
+                        </span>
+                    </div>
+                    <div class="kt-widget13__item">
+                        <span class="kt-widget13__desc kt-align-right">
+                            @L("FileName"):
+                        </span>
+                        <span class="kt-widget13__text kt-widget13__text--bold">
+                            <a href='/App/Common/GetFile?id=@Model.DocumentRequestAuditTrailsForViewModel.DocumentId&contentType=application/pdf&recipientId=@Model.ViewAndSignDocumentEmailViewModel.RecipientId' target='blank'>  @Model.DocumentRequestAuditTrailsForViewModel.FileName </a>
+                        </span>
+                    </div>
+                    <div class="kt-widget13__item">
+                        <span class="kt-widget13__desc">
+                            @L("Status"):
+                        </span>
+                        <span class="kt-widget13__text kt-widget13__text--bold">
+                            <button class="btn @((int)Model.DocumentRequestAuditTrailsForViewModel.Status == 3 ? "btn-success" : 
+                                        (int)Model.DocumentRequestAuditTrailsForViewModel.Status == 0 ? "btn-secondary disabled" : 
+                                        (int)Model.DocumentRequestAuditTrailsForViewModel.Status == 1 ? "btn-secondary active" : 
+                                        (int)Model.DocumentRequestAuditTrailsForViewModel.Status == 2 ? "btn-secondary" :"")" 
+                                style="pointer-events: none;"> @L("Enum_DocumentRequestStatus_" + (int)Model.DocumentRequestAuditTrailsForViewModel.Status)</button></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="@(await GetContainerClass()) kt-grid__item kt-grid__item--fluid">
+        <div class="kt-portlet kt-portlet--mobile">
+            <div class="kt-portlet__body">
+                <div class="row align-items-center">
+                    <table id="ViewAndSignDocumentTable" class="display table table-striped table-bordered table-hover dt-responsive nowrap">
+                        <thead>
+                            <tr>
+                                <th style="display:none;"></th>
+                                <th>@L("Order")</th>
+                                <th>@L("Recipient")</th>
+                                <th>@L("Status")</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.Recipients)
+                            {
+                                <tr>
+                                    <td>@L("Signer") #@(item.SigneOrder + 1)</td>
+                                    <td>@item.FirstName @item.LastName <br /> <i class='flaticon2-email kt-font-danger'></i> @item.Email</td>
+                                    <td>
+                                        @if (item.IsSigned)
+                                        {
+                                            <button class='btn btn-success' style='pointer-events: none;'> @L("Signed")</button> @L("on") <span>@item.SignatureDate</span>
+                                        }
+                                        else if (item.IsSent)
+                                        {
+                                            <button class='btn btn-secondary active' style='pointer-events: none;'> @L("Outstanding")</button> @L("sentOn") <span>@item.SentDate</span>
+                                        }
+                                        else
+                                        {
+                                            <button class='btn btn-secondary disabled' style='pointer-events: none;'>@L("Queued")</button>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="@(await GetContainerClass()) kt-grid__item kt-grid__item--fluid">
+        @await Html.PartialAsync("_DocumentAuditTrail", Model.DocumentRequestAuditTrailsForViewModel.DocumentRequestAuditTrailForViewDetailsDto)
+    </div>
+</div>
