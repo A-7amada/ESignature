@@ -4,30 +4,79 @@
 @model FileSignaturesViewModel
 @{ ViewBag.CurrentPageName = AppPageNames.Common.FileSignatures; }
 @section Styles{
-    
+    <style>
+        #host {
+            height: auto;
+            width: auto;
+        }
+
+        @@media (max-width:500px) {
+            .main-container {
+                padding: 0px;
+            }
+        }
+    </style>
 }
 @section Scripts
 {
-    <script abp-src="/view-resources/Areas/App/Views/FileSignatures/Index.js" asp-append-version="true"></script>
-  
+    @*<script abp-src="/view-resources/Areas/App/Views/FileSignatures/Index.js" asp-append-version="true"></script>*@
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/5.0.0/signalr.min.js" integrity="sha512-ktPnERrVwYTf4LgWInsccl9OsKyZsUEv4y4GkWAkXUqlpCQlP2W/f2A+4ix03il0M5OMwT3SstzAILmeLHT0wg==" crossorigin="anonymous"></script>
+    <script src="~/lib/gc-pdfviewer/gcpdfviewer.js" asp-append-version="true"></script>
 
+    <script id="js-sample-code">
+    function getHashValue(key) {
+        var matches = location.hash.match(new RegExp(key+'=([^&]*)'));
+        return matches ? matches[1] : null;
+    }
+    var viewer;
+    var options = {
+        supportApi: {
+            apiUrl: 'api/pdf-viewer',
+            token: 'support-api-demo-net-core-token-2021',
+            reconnectInterval: 1000
+        },
+        logLevel: 'Debug',
+        userName: getHashValue('user') || 'Anonymous'
+    };
+    if (window.createPdfViewer) {
+        viewer = window.createPdfViewer("#host", options);
+    } else {
+        if (options.userName === "Anonymous") {
+            options.userName = prompt("Please, input your name", options.userName) || "Anonymous";
+        }
+        viewer = new GcPdfViewer("#host", options);
+        viewer.addDefaultPanels();
+        viewer.addSharedDocumentsPanel();
+        @BTIT.EPM.Utils.GcPdfViewerRenderHelper.RenderOptions(BTIT.EPM.Sampels.SamplePdfCreator.GetViewerOptions())
+        viewer.beforeUnloadConfirmation = true;
+    }
+    if(viewer.then) {
+        viewer.then(function(resolvedViewer) {
+            viewer = resolvedViewer;
+            viewer.open("api/pdf-viewer/get-sample-pdf");
+        });
+    } else {
+        viewer.open("api/pdf-viewer/get-sample-pdf");
+    }
+
+    </script>
 }
 
 <div class="content d-flex flex-column flex-column-fluid">
 
-    <abp-page-subheader title='@L("FileSignatures")' description='@L("FileSignaturesHeaderInfo")'>
-        <button id="ExportToExcelButton" class="btn btn-outline-success"><i class="fa fa-file-excel"></i> @L("ExportToExcel")</button>
+    @*<abp-page-subheader title='@L("FileSignatures")' description='@L("FileSignaturesHeaderInfo")'>
+                <button id="ExportToExcelButton" class="btn btn-outline-success"><i class="fa fa-file-excel"></i> @L("ExportToExcel")</button>
 
-        @if (IsGranted(AppPermissions.Pages_FileSignatures_Create))
-        {
-<button id="CreateNewFileSignatureButton" class="btn btn-primary blue"><i class="fa fa-plus"></i> @L("CreateNewFileSignature")</button>}
-    </abp-page-subheader>
+                @if (IsGranted(AppPermissions.Pages_FileSignatures_Create))
+                {
+        <button id="CreateNewFileSignatureButton" class="btn btn-primary blue"><i class="fa fa-plus"></i> @L("CreateNewFileSignature")</button>}
+            </abp-page-subheader>*@
 
     <div class="@(await GetContainerClass())">
         <div class="card card-custom gutter-b">
             <div class="card-body">
 
-                <div class="form">
+                @*<div class="form">
                         <div class="row align-items-center mb-4">
                             <div class="col-xl-12">
                                 <div class="form-group align-items-center">
@@ -78,7 +127,7 @@
                                 </tr>
                             </thead>
                         </table>
-                    </div>
+                    </div>*@
 
 
                 <div id="host"></div>

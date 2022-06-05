@@ -27,7 +27,7 @@ namespace BTIT.EPM.Web.Areas.App.Startup
                         AppPageNames.Common.FileSignatures,
                         L("FileSignatures"),
                         url: "App/FileSignatures",
-                        icon: "flaticon-more",
+                        icon: "flaticon2-document",
                         permissionDependency: new SimplePermissionDependency(AppPermissions.Pages_FileSignatures)
                     )
                 ).AddItem(new MenuItemDefinition(

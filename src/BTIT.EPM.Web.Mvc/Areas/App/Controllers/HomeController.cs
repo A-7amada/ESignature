@@ -29,7 +29,7 @@ namespace BTIT.EPM.Web.Areas.App.Controllers
             {
                 if (await IsGrantedAsync(AppPermissions.Pages_Tenant_Dashboard))
                 {
-                    return RedirectToAction("Index", "DocumentRequests");
+                    return RedirectToAction("Index", "FileSignatures");
                 }
             }
 

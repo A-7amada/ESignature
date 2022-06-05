@@ -58,13 +58,13 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BTIT.EPM.Web.Core\BTIT.EPM.Web.Core.csproj" />
+    <ProjectReference Include="C:\Users\aabdelhamid\Downloads\GcPdf-5.1.0.792\GcPdfViewerWeb\SupportApi\SupportApi.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Abp.Castle.Log4Net" Version="5.4.0" />
     <PackageReference Include="AspNetCore.HealthChecks.UI" Version="3.0.9" />
     <PackageReference Include="FreeSpire.PDF" Version="8.2.0" />
     <PackageReference Include="GrapeCity.Documents.Pdf" Version="5.1.0.792" />
-    <PackageReference Include="GrapeCity.Documents.Pdf.ViewerSupportApi" Version="5.1.0.792" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Twitter" Version="3.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="3.1.1" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.9.10" />
