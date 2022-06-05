@@ -36,6 +36,7 @@ using BTIT.EPM.Net.Emailing;
 using BTIT.EPM.Notifications;
 using BTIT.EPM.WebHooks;
 
+
 namespace BTIT.EPM
 {
     [DependsOn(
@@ -115,6 +116,8 @@ namespace BTIT.EPM
                 cache.DefaultSlidingExpireTime = TimeSpan.FromMinutes(30);
             });
 
+            //Configuration.Modules.AbpAspNetCore().DefaultWrapResultAttribute.WrapOnError = false;
+            //Configuration.Modules.AbpAspNetCore().DefaultWrapResultAttribute.WrapOnSuccess = false;
             IocManager.Register<DashboardConfiguration>();
         }
 

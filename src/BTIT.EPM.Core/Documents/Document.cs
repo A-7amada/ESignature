@@ -34,7 +34,13 @@ namespace BTIT.EPM.Documents
 		
         [ForeignKey("BinaryObjectId")]
 		public BinaryObject BinaryObjectFk { get; set; }
-		
+
+
+		public virtual long? DocumentBagId { get; set; }
+
+		[ForeignKey("DocumentBagId")]
+		public DocumentBag DocumentBagFk { get; set; }
+
 		public virtual long? DocumentRequestId { get; set; }
 		
         [ForeignKey("DocumentRequestId")]
@@ -42,6 +48,8 @@ namespace BTIT.EPM.Documents
 
 		[NotMapped]
 		public string Recipients { get; set; }
+
+
 
 	}
 }

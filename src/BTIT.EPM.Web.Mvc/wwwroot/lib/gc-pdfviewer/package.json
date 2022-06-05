@@ -1,0 +1,56 @@
+{
+  "_from": "@grapecity/gcpdfviewer@^3.1.4",
+  "_id": "@grapecity/gcpdfviewer@3.1.4",
+  "_inBundle": false,
+  "_integrity": "sha512-lLKvokE/SBl3omBP2kui0LhBjBjgb9c4ovIZVViVHeguz99IEY7ColY2+MeluGf6pnHrT+NTYksSNc5BBDPXtg==",
+  "_location": "/@grapecity/gcpdfviewer",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "range",
+    "registry": true,
+    "raw": "@grapecity/gcpdfviewer@^3.1.4",
+    "name": "@grapecity/gcpdfviewer",
+    "escapedName": "@grapecity%2fgcpdfviewer",
+    "scope": "@grapecity",
+    "rawSpec": "^3.1.4",
+    "saveSpec": null,
+    "fetchSpec": "^3.1.4"
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/@grapecity/gcpdfviewer/-/gcpdfviewer-3.1.4.tgz",
+  "_shasum": "0d4573a550f10fcf4a058de6d045c4354d238905",
+  "_spec": "@grapecity/gcpdfviewer@^3.1.4",
+  "_where": "D:\\Main\\src\\BTIT.EPM.Web.Mvc\\wwwroot\\lib",
+  "author": {
+    "name": "GrapeCity, Inc"
+  },
+  "bugs": {
+    "url": "https://www.grapecity.com/forums/documents-pdf"
+  },
+  "bundleDependencies": false,
+  "dependencies": {},
+  "deprecated": false,
+  "description": "GrapeCity Documents PDF Viewer",
+  "homepage": "https://www.grapecity.com/documents-api-pdf",
+  "keywords": [
+    "control",
+    "component",
+    "PDF",
+    "viewer",
+    "PDF viewer",
+    "JS PDF viewer",
+    "react viewer",
+    "preact viewer",
+    "redact",
+    "acroform",
+    "PDF annotation"
+  ],
+  "license": "Commercial",
+  "main": "./gcpdfviewer.js",
+  "name": "@grapecity/gcpdfviewer",
+  "types": "./typings/index.d.ts",
+  "version": "3.1.4"
+}

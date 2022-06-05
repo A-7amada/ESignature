@@ -11,19 +11,56 @@ namespace BTIT.EPM.Storage
     {
         public virtual int? TenantId { get; set; }
 
-        [Required]
-        public virtual byte[] Bytes { get; set; }
+        public virtual string Description { get; set; }
+
+        [Required] public virtual byte[] Bytes { get; set; }
+
+        public string ContentType { get; set; }
+
+        public string FileExtension { get; set; }
+        public string FileName { get; set; }
 
         public BinaryObject()
         {
             Id = SequentialGuidGenerator.Instance.Create();
         }
 
-        public BinaryObject(int? tenantId, byte[] bytes)
+        public BinaryObject(int? tenantId, byte[] bytes, string description = null)
+: this()
+        {
+            TenantId = tenantId;
+            Bytes = bytes;
+            Description = description;
+        }
+
+
+        public BinaryObject(int? tenantId, byte[] bytes, string contentType, string description)
+    : this()
+        {
+            TenantId = tenantId;
+            Bytes = bytes;
+            Description = description;
+            ContentType = contentType;
+        }
+
+        public BinaryObject(int? tenantId, byte[] bytes, string contentType, string fileExtension, string description)
             : this()
         {
             TenantId = tenantId;
             Bytes = bytes;
+            Description = description;
+            ContentType = contentType;
+            FileExtension = fileExtension;
+        }
+        public BinaryObject(int? tenantId, byte[] bytes, string contentType, string fileExtension, string description, string fileName)
+            : this()
+        {
+            TenantId = tenantId;
+            Bytes = bytes;
+            Description = description;
+            ContentType = contentType;
+            FileExtension = fileExtension;
+            FileName = fileName;
         }
     }
 }

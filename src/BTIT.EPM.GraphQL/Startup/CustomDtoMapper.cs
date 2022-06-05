@@ -2,6 +2,8 @@
 using BTIT.EPM.Authorization.Users;
 using BTIT.EPM.DigitalSignature;
 using BTIT.EPM.DigitalSignature.Dtos;
+using BTIT.EPM.Documents;
+using BTIT.EPM.Documents.Dtos;
 using BTIT.EPM.Dto;
 
 namespace BTIT.EPM.Startup
@@ -27,6 +29,7 @@ namespace BTIT.EPM.Startup
                 .ForMember(dto => dto.UserId, options => options.MapFrom(r => r.UserId))
                 .ForMember(dto => dto.Name, options => options.MapFrom(r => r.UserFk!=null ?r.UserFk.FullName:string.Empty))
                 .ForMember(dto => dto.UserName, options => options.MapFrom(r => r.UserFk != null ? r.UserFk.UserName:string.Empty));
+            configuration.CreateMap<DocumentDto, Document>().ReverseMap();
 
         }
     }

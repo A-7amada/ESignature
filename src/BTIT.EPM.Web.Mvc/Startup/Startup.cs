@@ -41,6 +41,9 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using BTIT.EPM.Web.HealthCheck;
 using HealthChecksUISettings = HealthChecks.UI.Configuration.Settings;
+using GrapeCity.Documents.Pdf.ViewerSupportApi.Connection;
+using GrapeCity.Documents.Pdf.ViewerSupportApi.Models;
+using GrapeCity.Documents.Pdf.ViewerSupportApi.Controllers;
 
 namespace BTIT.EPM.Web.Startup
 {
@@ -157,6 +160,8 @@ namespace BTIT.EPM.Web.Startup
                 options.ViewLocationExpanders.Add(new RazorViewLocationExpander());
             });
 
+            GcPdfViewerHub.ConfigureServices(services);
+           // services.AddMvc((opts) => { opts.EnableEndpointRouting = false; });
             //Configure Abp and Dependency Injection
             return services.AddAbp<EPMWebMvcModule>(options =>
             {
@@ -169,16 +174,19 @@ namespace BTIT.EPM.Web.Startup
 
                 options.PlugInSources.AddFolder(Path.Combine(_hostingEnvironment.WebRootPath, "Plugins"), SearchOption.AllDirectories);
             });
+
+           
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
         {
+         
             //Initializes ABP framework.
             app.UseAbp(options =>
             {
                 options.UseAbpRequestLocalization = false; //used below: UseAbpRequestLocalization
             });
-
+            //app.UseMvcWithDefaultRoute();
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -239,7 +247,8 @@ namespace BTIT.EPM.Web.Startup
                         new GraphQLPlaygroundOptions()); //to explorer API navigate https://*DOMAIN*/ui/playground
                 }
             }
-
+            GcPdfViewerHub.Configure(app);
+            GcPdfViewerController.Settings.VerifyToken += VerifyAuthToken;
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapHub<AbpCommonHub>("/signalr");
@@ -257,6 +266,7 @@ namespace BTIT.EPM.Web.Startup
                     });
                 }
             });
+           
 
             if (bool.Parse(_appConfiguration["HealthChecks:HealthChecksEnabled"]))
             {
@@ -279,7 +289,16 @@ namespace BTIT.EPM.Web.Startup
                     options.InjectBaseUrl(_appConfiguration["App:WebSiteRootAddress"]);
                 }); //URL: /swagger
             }
+          
+        }
 
+        private void VerifyAuthToken(object sender, VerifyTokenEventArgs e)
+        {
+            string token = e.Token;
+            if (string.IsNullOrEmpty(token) || !token.Equals("support-api-demo-net-core-token-2021"))
+            {
+                e.Reject = true;
+            }
         }
     }
 }

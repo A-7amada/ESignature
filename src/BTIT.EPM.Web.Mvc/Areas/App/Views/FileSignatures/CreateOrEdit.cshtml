@@ -1,0 +1,116 @@
+﻿
+@using System.Globalization
+@using BTIT.EPM.Web.Areas.App.Models.Common.Modals
+@using BTIT.EPM.Web.Areas.App.Models.FileSignatures
+@using BTIT.EPM.Documents.Dtos;
+@model CreateOrEditFileSignatureModalViewModel
+@using Abp.Extensions
+@*@await Html.PartialAsync("~/Areas/App/Views/Common/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel(Model.IsEditMode ? (L("EditFileSignature")) : L("CreateNewFileSignature")))*@
+@section Styles{
+    <style>
+        #host {
+            height: auto;
+            width: auto;
+        }
+
+        @@media (max-width:500px) {
+            .main-container {
+                padding: 0px;
+            }
+        }
+    </style>
+}
+@section Scripts
+{
+
+    <script abp-src="/view-resources/Areas/App/Views/FileSignatures/CreateOrEdit.js" asp-append-version="true"></script>
+    <script abp-src="/view-resources/Areas/App/Views/_Bundles/demo-ui-components.js" asp-append-version="true"></script>
+    <script abp-src="/view-resources/Areas/App/Views/Documents/FileUpload.js" asp-append-version="true"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/5.0.0/signalr.min.js" integrity="sha512-ktPnERrVwYTf4LgWInsccl9OsKyZsUEv4y4GkWAkXUqlpCQlP2W/f2A+4ix03il0M5OMwT3SstzAILmeLHT0wg==" crossorigin="anonymous"></script>
+    <script src="~/lib/gc-pdfviewer/gcpdfviewer.js" asp-append-version="true"></script>
+
+    <script id="js-sample-code">
+    function getHashValue(key) {
+        var matches = location.hash.match(new RegExp(key+'=([^&]*)'));
+        return matches ? matches[1] : null;
+    }
+    var viewer;
+    var options = {
+        supportApi: {
+            apiUrl: 'api/pdf-viewer',
+            token: 'support-api-demo-net-core-token-2021',
+            reconnectInterval: 1000
+        },
+        logLevel: 'Debug',
+        userName: getHashValue('user') || 'Anonymous'
+    };
+    if (window.createPdfViewer) {
+        viewer = window.createPdfViewer("#host", options);
+    } else {
+        if (options.userName === "Anonymous") {
+            options.userName = prompt("Please, input your name", options.userName) || "Anonymous";
+        }
+        viewer = new GcPdfViewer("#host", options);
+        viewer.addDefaultPanels();
+        viewer.addSharedDocumentsPanel();
+        @BTIT.EPM.Utils.GcPdfViewerRenderHelper.RenderOptions(BTIT.EPM.Sampels.SamplePdfCreator.GetViewerOptions())
+        viewer.beforeUnloadConfirmation = true;
+    }
+    if(viewer.then) {
+        viewer.then(function(resolvedViewer) {
+            viewer = resolvedViewer;
+            viewer.open("api/pdf-viewer/get-sample-pdf");
+        });
+    } else {
+        viewer.open("api/pdf-viewer/get-sample-pdf");
+    }
+
+    // Viewer opened.
+    </script>
+}
+<div class="content d-flex flex-column flex-column-fluid">
+    <div class="@(await GetContainerClass())">
+        <div class="card card-custom gutter-b">
+            <div class="card-body">
+              
+              
+                    <form name="FileSignatureInformationsForm" role="form" novalidate class="form-validation">
+
+                        @if (Model.IsEditMode)
+                        {
+            <input type="hidden" name="id" value="@Model.FileSignature.Id" />}
+
+
+
+
+                        <div class="form-group">
+                            <label for="FileSignature_Name">@L("Name")</label>
+                            <input class="form-control" id="FileSignature_Name" value="@Model.FileSignature.Name" type="text" name="name" />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="FileSignature_Describtion">@L("Describtion")</label>
+                            <input class="form-control" id="FileSignature_Describtion" value="@Model.FileSignature.Describtion" type="text" name="describtion" />
+                        </div>
+                        <div class="separator separator-dashed my-5"></div>
+                        @await Html.PartialAsync("../Documents/_FileUpload", new FileUploadData() { DocumentBagId = @Model.FileSignature.DocumentBagId.Value, Documents = @Model.Documents })
+
+
+                        <div class="row align-items-center">
+                            <div class="col-lg-12">
+                                <button type="button" id="saveBtn" class="btn btn-success float-right"><i class="fa fa-save"></i> @L("SendRequest")</button>
+                            </div>
+                        </div>
+
+
+                    </form>
+              
+
+                    <div id="host"></div>
+               
+                </div>
+            </div>
+            
+    </div>
+</div>
+

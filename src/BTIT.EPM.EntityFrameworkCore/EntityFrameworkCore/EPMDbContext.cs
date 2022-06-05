@@ -1,4 +1,5 @@
-﻿using BTIT.EPM.Documents;
+﻿using BTIT.EPM.ESignatureDemo;
+using BTIT.EPM.Documents;
 using BTIT.EPM.DigitalSignature;
 using Abp.IdentityServer4;
 using Abp.Zero.EntityFrameworkCore;
@@ -18,11 +19,14 @@ namespace BTIT.EPM.EntityFrameworkCore
 {
     public class EPMDbContext : AbpZeroDbContext<Tenant, Role, User, EPMDbContext>, IAbpPersistedGrantDbContext
     {
+        public virtual DbSet<FileSignature> FileSignatures { get; set; }
+
         public virtual DbSet<Contact> Contacts { get; set; }
 
         public virtual DbSet<Recipient> Recipients { get; set; }
 
         public virtual DbSet<Document> Documents { get; set; }
+        public virtual DbSet<DocumentBag> DocumentBags { get; set; }
 
         public virtual DbSet<DocumentRequestAuditTrail> DocumentRequestAuditTrails { get; set; }
 
@@ -58,35 +62,34 @@ namespace BTIT.EPM.EntityFrameworkCore
         {
             base.OnModelCreating(modelBuilder);
 
-           
-           
-           
-           
-           
+            modelBuilder.Entity<FileSignature>(f =>
+            {
+                f.HasIndex(e => new { e.TenantId });
+            });
             modelBuilder.Entity<Contact>(c =>
-            {
-                c.HasIndex(e => new { e.TenantId });
-            });
- modelBuilder.Entity<Recipient>(r =>
-            {
-                r.HasIndex(e => new { e.TenantId });
-            });
- modelBuilder.Entity<Document>(d =>
-            {
-                d.HasIndex(e => new { e.TenantId });
-            });
- modelBuilder.Entity<DocumentRequestAuditTrail>(d =>
-            {
-                d.HasIndex(e => new { e.TenantId });
-            });
- modelBuilder.Entity<DocumentRequest>(d =>
-            {
-                d.HasIndex(e => new { e.TenantId });
-            });
- modelBuilder.Entity<BinaryObject>(b =>
-            {
-                b.HasIndex(e => new { e.TenantId });
-            });
+                       {
+                           c.HasIndex(e => new { e.TenantId });
+                       });
+            modelBuilder.Entity<Recipient>(r =>
+                       {
+                           r.HasIndex(e => new { e.TenantId });
+                       });
+            modelBuilder.Entity<Document>(d =>
+                       {
+                           d.HasIndex(e => new { e.TenantId });
+                       });
+            modelBuilder.Entity<DocumentRequestAuditTrail>(d =>
+                       {
+                           d.HasIndex(e => new { e.TenantId });
+                       });
+            modelBuilder.Entity<DocumentRequest>(d =>
+                       {
+                           d.HasIndex(e => new { e.TenantId });
+                       });
+            modelBuilder.Entity<BinaryObject>(b =>
+                       {
+                           b.HasIndex(e => new { e.TenantId });
+                       });
 
             modelBuilder.Entity<ChatMessage>(b =>
             {

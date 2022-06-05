@@ -11,6 +11,7 @@ using BTIT.EPM.Configuration;
 using BTIT.EPM.EntityFrameworkCore;
 using BTIT.EPM.MultiTenancy;
 using BTIT.EPM.Web.Areas.App.Startup;
+using Abp.AspNetCore.Configuration;
 
 namespace BTIT.EPM.Web.Startup
 {
@@ -31,6 +32,8 @@ namespace BTIT.EPM.Web.Startup
             Configuration.Modules.AbpWebCommon().MultiTenancy.DomainFormat = _appConfiguration["App:WebSiteRootAddress"] ?? "https://localhost:44302/";
             Configuration.Modules.AspNetZero().LicenseCode = _appConfiguration["AbpZeroLicenseCode"];
             Configuration.Navigation.Providers.Add<AppNavigationProvider>();
+            Configuration.Modules.AbpAspNetCore().DefaultWrapResultAttribute.WrapOnError = false;
+            Configuration.Modules.AbpAspNetCore().DefaultWrapResultAttribute.WrapOnSuccess = false;
         }
 
         public override void Initialize()

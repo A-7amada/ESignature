@@ -8,6 +8,8 @@
 
 		public string DocumentRequestDocumentTitle { get; set;}
 
+        public string DocumentBagDocumentBagId { get; set; }
 
+        public string BinaryObjectDescription { get; set; }
     }
 }

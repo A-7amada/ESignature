@@ -39,7 +39,7 @@ namespace BTIT.EPM.Documents.Exporting
                         L("Extension"),
                         L("Size"),
                         L("ContentType"),
-                        L("IsActive"),
+                        //L("IsActive"),
                         (L("BinaryObject")) + L("TenantId"),
                         (L("DocumentRequest")) + L("DocumentTitle")
                         );
@@ -50,7 +50,7 @@ namespace BTIT.EPM.Documents.Exporting
                         _ => _.Document.Extension,
                         _ => _.Document.Size,
                         _ => _.Document.ContentType,
-                        _ => _.Document.IsActive,
+                        //_ => _.Document.IsActive,
                         _ => _.BinaryObjectTenantId,
                         _ => _.DocumentRequestDocumentTitle
                         );

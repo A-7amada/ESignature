@@ -1,6 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
-  <texts>
+  <texts>    <text name="ESignatureDemo">E signature demo</text>
+    <text name="FileSignature">File signature</text>
+    <text name="BTIT.EPM.ESignatureDemo.FileSignature">FileSignature</text>
+    <text name="Describtion">Describtion</text>
+    <text name="FileSignaturesHeaderInfo">File signatures header info</text>
+    <text name="CreateNewFileSignature">Create new file signature</text>
+    <text name="EditFileSignature">Edit file signature</text>
+    <text name="DeleteFileSignature">Delete file signature</text>
+    <text name="FileSignatures">File signatures</text>
+
     <text name="SubmitSignature">Submit Signature</text>
     <text name="DocumentSentBy">Document Sent By</text>
     <text name="User">User</text>

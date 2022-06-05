@@ -22,6 +22,14 @@ namespace BTIT.EPM.Web.Areas.App.Startup
                         permissionDependency: new SimplePermissionDependency(AppPermissions.Pages_Administration_Host_Dashboard),
                         order: 1
                     )
+                )
+                .AddItem(new MenuItemDefinition(
+                        AppPageNames.Common.FileSignatures,
+                        L("FileSignatures"),
+                        url: "App/FileSignatures",
+                        icon: "flaticon-more",
+                        permissionDependency: new SimplePermissionDependency(AppPermissions.Pages_FileSignatures)
+                    )
                 ).AddItem(new MenuItemDefinition(
                         AppPageNames.Tenant.DocumentRequests,
                         L("DocumentRequests"),
@@ -185,7 +193,7 @@ namespace BTIT.EPM.Web.Areas.App.Startup
                         url: "App/DemoUiComponents",
                         icon: "flaticon-shapes",
                         permissionDependency: new SimplePermissionDependency(AppPermissions.Pages_DemoUiComponents),
-                        order:10
+                        order: 10
                     )
                 );
         }

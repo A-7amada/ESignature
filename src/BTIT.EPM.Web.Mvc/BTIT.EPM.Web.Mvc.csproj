@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
   <Import Project="..\..\common.props"></Import>
   <PropertyGroup Label="Globals">
     <SccProjectName>SAK</SccProjectName>
@@ -32,13 +32,18 @@
     <None Remove="App_Data\**" />
   </ItemGroup>
   <ItemGroup>
+    <Content Remove="bundleconfig.json" />
     <Content Remove="wwwroot\swagger\ui\index.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="bundleconfig.json" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="wwwroot\swagger\ui\index.html" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="bundleconfig.json" />
     <None Include="wwwroot\Plugins\.gitkeep" />
     <None Update="Dockerfile">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -57,6 +62,9 @@
   <ItemGroup>
     <PackageReference Include="Abp.Castle.Log4Net" Version="5.4.0" />
     <PackageReference Include="AspNetCore.HealthChecks.UI" Version="3.0.9" />
+    <PackageReference Include="FreeSpire.PDF" Version="8.2.0" />
+    <PackageReference Include="GrapeCity.Documents.Pdf" Version="5.1.0.792" />
+    <PackageReference Include="GrapeCity.Documents.Pdf.ViewerSupportApi" Version="5.1.0.792" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Twitter" Version="3.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="3.1.1" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.9.10" />

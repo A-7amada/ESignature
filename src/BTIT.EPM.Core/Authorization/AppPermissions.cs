@@ -6,6 +6,11 @@
     /// </summary>
     public static class AppPermissions
     {
+        public const string Pages_FileSignatures = "Pages.FileSignatures";
+        public const string Pages_FileSignatures_Create = "Pages.FileSignatures.Create";
+        public const string Pages_FileSignatures_Edit = "Pages.FileSignatures.Edit";
+        public const string Pages_FileSignatures_Delete = "Pages.FileSignatures.Delete";
+
         public const string Pages_Contacts = "Pages.Contacts";
         public const string Pages_Contacts_Create = "Pages.Contacts.Create";
         public const string Pages_Contacts_Edit = "Pages.Contacts.Edit";

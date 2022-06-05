@@ -12,6 +12,11 @@
   resolved "https://registry.yarnpkg.com/@fortawesome/fontawesome-free/-/fontawesome-free-5.10.2.tgz#27e02da1e34b50c9869179d364fb46627b521130"
   integrity sha512-9pw+Nsnunl9unstGEHQ+u41wBEQue6XPBsILXtJF/4fNN1L3avJcMF/gGF86rIjeTAgfLjTY9ndm68/X4f4idQ==
 
+"@grapecity/gcpdfviewer@^3.1.4":
+  version "3.1.4"
+  resolved "https://registry.yarnpkg.com/@grapecity/gcpdfviewer/-/gcpdfviewer-3.1.4.tgz#0d4573a550f10fcf4a058de6d045c4354d238905"
+  integrity sha512-lLKvokE/SBl3omBP2kui0LhBjBjgb9c4ovIZVViVHeguz99IEY7ColY2+MeluGf6pnHrT+NTYksSNc5BBDPXtg==
+
 "@microsoft/signalr@^3.1.2":
   version "3.1.2"
   resolved "https://registry.yarnpkg.com/@microsoft/signalr/-/signalr-3.1.2.tgz#74561aea8a7e1fb8a6f5d428149a2b81cafe188a"

@@ -1,4 +1,6 @@
-﻿using BTIT.EPM.Documents.Dtos;
+﻿using BTIT.EPM.ESignatureDemo.Dtos;
+using BTIT.EPM.ESignatureDemo;
+using BTIT.EPM.Documents.Dtos;
 using BTIT.EPM.Documents;
 using BTIT.EPM.DigitalSignature.Dtos;
 using BTIT.EPM.DigitalSignature;
@@ -51,6 +53,8 @@ namespace BTIT.EPM
     {
         public static void CreateMappings(IMapperConfigurationExpression configuration)
         {
+            configuration.CreateMap<CreateOrEditFileSignatureDto, FileSignature>().ReverseMap();
+            configuration.CreateMap<FileSignatureDto, FileSignature>().ReverseMap();
             configuration.CreateMap<CreateOrEditContactDto, Contact>().ReverseMap();
             configuration.CreateMap<ContactDto, Contact>().ReverseMap();
             configuration.CreateMap<CreateOrEditRecipientDto, Recipient>().ReverseMap();
@@ -101,7 +105,6 @@ namespace BTIT.EPM
             configuration.CreateMap<Edition, EditionEditDto>();
             configuration.CreateMap<Edition, SubscribableEdition>();
             configuration.CreateMap<Edition, EditionSelectDto>();
-
 
             //Payment
             configuration.CreateMap<SubscriptionPaymentDto, SubscriptionPayment>().ReverseMap();
@@ -172,7 +175,6 @@ namespace BTIT.EPM
             configuration.CreateMap<EntityDynamicParameterValue, EntityDynamicParameterValueDto>().ReverseMap();
             //User Delegations
             configuration.CreateMap<CreateUserDelegationDto, UserDelegation>();
-
 
             /* ADD YOUR OWN CUSTOM AUTOMAPPER MAPPINGS HERE */
         }

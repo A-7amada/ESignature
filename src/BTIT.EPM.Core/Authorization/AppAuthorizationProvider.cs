@@ -30,40 +30,35 @@ namespace BTIT.EPM.Authorization
 
             var pages = context.GetPermissionOrNull(AppPermissions.Pages) ?? context.CreatePermission(AppPermissions.Pages, L("Pages"));
 
+            var fileSignatures = pages.CreateChildPermission(AppPermissions.Pages_FileSignatures, L("FileSignatures"));
+            fileSignatures.CreateChildPermission(AppPermissions.Pages_FileSignatures_Create, L("CreateNewFileSignature"));
+            fileSignatures.CreateChildPermission(AppPermissions.Pages_FileSignatures_Edit, L("EditFileSignature"));
+            fileSignatures.CreateChildPermission(AppPermissions.Pages_FileSignatures_Delete, L("DeleteFileSignature"));
+
             var documentRequests = pages.CreateChildPermission(AppPermissions.Pages_DocumentRequests, L("DocumentRequests"), multiTenancySides: MultiTenancySides.Tenant);
             documentRequests.CreateChildPermission(AppPermissions.Pages_DocumentRequests_Create, L("CreateNewDocumentRequest"), multiTenancySides: MultiTenancySides.Tenant);
             documentRequests.CreateChildPermission(AppPermissions.Pages_DocumentRequests_Edit, L("EditDocumentRequest"), multiTenancySides: MultiTenancySides.Tenant);
             documentRequests.CreateChildPermission(AppPermissions.Pages_DocumentRequests_Delete, L("DeleteDocumentRequest"), multiTenancySides: MultiTenancySides.Tenant);
-
-
 
             var contacts = pages.CreateChildPermission(AppPermissions.Pages_Contacts, L("Contacts"), multiTenancySides: MultiTenancySides.Tenant);
             contacts.CreateChildPermission(AppPermissions.Pages_Contacts_Create, L("CreateNewContact"), multiTenancySides: MultiTenancySides.Tenant);
             contacts.CreateChildPermission(AppPermissions.Pages_Contacts_Edit, L("EditContact"), multiTenancySides: MultiTenancySides.Tenant);
             contacts.CreateChildPermission(AppPermissions.Pages_Contacts_Delete, L("DeleteContact"), multiTenancySides: MultiTenancySides.Tenant);
 
-
-
             var recipients = pages.CreateChildPermission(AppPermissions.Pages_Recipients, L("Recipients"), multiTenancySides: MultiTenancySides.Tenant);
             recipients.CreateChildPermission(AppPermissions.Pages_Recipients_Create, L("CreateNewRecipient"), multiTenancySides: MultiTenancySides.Tenant);
             recipients.CreateChildPermission(AppPermissions.Pages_Recipients_Edit, L("EditRecipient"), multiTenancySides: MultiTenancySides.Tenant);
             recipients.CreateChildPermission(AppPermissions.Pages_Recipients_Delete, L("DeleteRecipient"), multiTenancySides: MultiTenancySides.Tenant);
-
-
 
             var documents = pages.CreateChildPermission(AppPermissions.Pages_Documents, L("Documents"), multiTenancySides: MultiTenancySides.Tenant);
             documents.CreateChildPermission(AppPermissions.Pages_Documents_Create, L("CreateNewDocument"), multiTenancySides: MultiTenancySides.Tenant);
             documents.CreateChildPermission(AppPermissions.Pages_Documents_Edit, L("EditDocument"), multiTenancySides: MultiTenancySides.Tenant);
             documents.CreateChildPermission(AppPermissions.Pages_Documents_Delete, L("DeleteDocument"), multiTenancySides: MultiTenancySides.Tenant);
 
-
-
             var documentRequestAuditTrails = pages.CreateChildPermission(AppPermissions.Pages_DocumentRequestAuditTrails, L("DocumentRequestAuditTrails"), multiTenancySides: MultiTenancySides.Tenant);
             documentRequestAuditTrails.CreateChildPermission(AppPermissions.Pages_DocumentRequestAuditTrails_Create, L("CreateNewDocumentRequestAuditTrail"), multiTenancySides: MultiTenancySides.Tenant);
             documentRequestAuditTrails.CreateChildPermission(AppPermissions.Pages_DocumentRequestAuditTrails_Edit, L("EditDocumentRequestAuditTrail"), multiTenancySides: MultiTenancySides.Tenant);
             documentRequestAuditTrails.CreateChildPermission(AppPermissions.Pages_DocumentRequestAuditTrails_Delete, L("DeleteDocumentRequestAuditTrail"), multiTenancySides: MultiTenancySides.Tenant);
-
-
 
             pages.CreateChildPermission(AppPermissions.Pages_DemoUiComponents, L("DemoUiComponents"));
 

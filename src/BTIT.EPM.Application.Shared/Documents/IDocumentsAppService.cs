@@ -11,22 +11,25 @@ namespace BTIT.EPM.Documents
 	public interface IDocumentsAppService : IApplicationService 
     {
         Task<PagedResultDto<GetDocumentForViewDto>> GetAll(GetAllDocumentsInput input);
-		Task<PagedResultDto<GetDocumentForViewDto>> GetUserDocuments(GetAllDocumentsInput input);
 
-		Task<GetDocumentForViewDto> GetDocumentForView(long id);
+        Task<GetDocumentForViewDto> GetDocumentForView(long id);
 
-		Task<GetDocumentForEditOutput> GetDocumentForEdit(EntityDto<long> input);
+        Task<List<GetDocumentForViewDto>> GetDocuments(long? documentBagId = null, long? documentTypeEnum = null);
 
-		Task CreateOrEdit(CreateOrEditDocumentDto input);
+        Task<GetDocumentForEditOutput> GetDocumentForEdit(EntityDto<long> input);
 
-		Task Delete(EntityDto<long> input);
+        Task CreateOrEdit(CreateDocumentInputDto input);
 
-		Task<FileDto> GetDocumentsToExcel(GetAllDocumentsForExcelInput input);
+        Task<long> CreateDocuments(List<CreateDocumentInputDto> filesDto);
 
-		
-		Task<List<DocumentBinaryObjectLookupTableDto>> GetAllBinaryObjectForTableDropdown();
-		
-		Task<List<DocumentDocumentRequestLookupTableDto>> GetAllDocumentRequestForTableDropdown();
-		Task<DocumentDto> GetDocument(long documentId);
-	}
+        Task Delete(long id);
+
+        Task<FileDto> GetDocumentsToExcel(GetAllDocumentsForExcelInput input);
+
+        Task<List<DocumentDocumentBagLookupTableDto>> GetAllDocumentBagForTableDropdown();
+
+        Task<List<DocumentBinaryObjectLookupTableDto>> GetAllBinaryObjectForTableDropdown();
+
+        long GenerateDocmantBagId();
+    }
 }

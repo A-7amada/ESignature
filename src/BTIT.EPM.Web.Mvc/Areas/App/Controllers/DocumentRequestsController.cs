@@ -156,8 +156,8 @@ namespace BTIT.EPM.Web.Areas.App.Controllers
                 };
 
                 //================== Save Document =============================
-                await _documentAppService.CreateOrEdit(document);
-                await _documentRequestAuditTrailsAppService.AddAuditByDocumentRequestIdAsync(documentRequestId, AuditTrailType.Created);
+                //await _documentAppService.CreateOrEdit(document);
+                //await _documentRequestAuditTrailsAppService.AddAuditByDocumentRequestIdAsync(documentRequestId, AuditTrailType.Created);
 
 
                 return Json(new AjaxResponse(new

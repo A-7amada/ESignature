@@ -1966,6 +1966,9 @@ namespace BTIT.EPM.Migrations
                     b.Property<DateTime?>("DeletionTime")
                         .HasColumnType("datetime2");
 
+                    b.Property<long?>("DocumentBagId")
+                        .HasColumnType("bigint");
+
                     b.Property<long?>("DocumentRequestId")
                         .HasColumnType("bigint");
 
@@ -2000,11 +2003,72 @@ namespace BTIT.EPM.Migrations
 
                     b.HasIndex("BinaryObjectId");
 
+                    b.HasIndex("DocumentBagId");
+
                     b.HasIndex("DocumentRequestId");
 
                     b.HasIndex("TenantId");
 
                     b.ToTable("Documents");
+                });
+
+            modelBuilder.Entity("BTIT.EPM.Documents.DocumentBag", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("CreationTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long?>("CreatorUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long?>("DeleterUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime?>("DeletionTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DocumentBagId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("LastModificationTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long?>("LastModifierUserId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("DocumentBags");
+                });
+
+            modelBuilder.Entity("BTIT.EPM.ESignatureDemo.FileSignature", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Describtion")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("TenantId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TenantId");
+
+                    b.ToTable("FileSignatures");
                 });
 
             modelBuilder.Entity("BTIT.EPM.Friendships.Friendship", b =>
@@ -2288,6 +2352,18 @@ namespace BTIT.EPM.Migrations
                         .IsRequired()
                         .HasColumnType("varbinary(max)");
 
+                    b.Property<string>("ContentType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FileExtension")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FileName")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int?>("TenantId")
                         .HasColumnType("int");
 
@@ -2562,6 +2638,10 @@ namespace BTIT.EPM.Migrations
                     b.HasOne("BTIT.EPM.Storage.BinaryObject", "BinaryObjectFk")
                         .WithMany()
                         .HasForeignKey("BinaryObjectId");
+
+                    b.HasOne("BTIT.EPM.Documents.DocumentBag", "DocumentBagFk")
+                        .WithMany()
+                        .HasForeignKey("DocumentBagId");
 
                     b.HasOne("BTIT.EPM.DigitalSignature.DocumentRequest", "DocumentRequestFk")
                         .WithMany("Documents")
