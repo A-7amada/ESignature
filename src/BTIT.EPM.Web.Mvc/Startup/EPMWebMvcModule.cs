@@ -12,6 +12,7 @@ using BTIT.EPM.EntityFrameworkCore;
 using BTIT.EPM.MultiTenancy;
 using BTIT.EPM.Web.Areas.App.Startup;
 using Abp.AspNetCore.Configuration;
+using GrapeCity.Documents.Pdf.ViewerSupportApi.Controllers;
 
 namespace BTIT.EPM.Web.Startup
 {
@@ -34,6 +35,8 @@ namespace BTIT.EPM.Web.Startup
             Configuration.Navigation.Providers.Add<AppNavigationProvider>();
             Configuration.Modules.AbpAspNetCore().DefaultWrapResultAttribute.WrapOnError = false;
             Configuration.Modules.AbpAspNetCore().DefaultWrapResultAttribute.WrapOnSuccess = false;
+            IocManager.Register(typeof(GcPdfViewerController), DependencyLifeStyle.Transient);
+            
         }
 
         public override void Initialize()
