@@ -8,6 +8,7 @@ namespace BTIT.EPM.ESignatureDemo.Dtos
         public string Name { get; set; }
 
         public string Describtion { get; set; }
+        public string FileUrl { get; set; }
 
     }
 }

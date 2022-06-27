@@ -83,6 +83,20 @@ namespace BTIT.EPM.Web.Areas.App.Controllers
 
             return PartialView("_ViewFileSignatureModal", model);
         }
+        public async Task<PartialViewResult> ViewFilePreviewModal(string fileUrl)
+        {
+            
+
+            var model = new FileSignatureViewModel()
+            {
+                FileSignature = new FileSignatureDto()
+                {
+                    FileUrl= fileUrl
+                }
+            };
+
+            return PartialView("_ViewFileSignatureModal", model);
+        }
         [HttpPost]
         public async Task<JsonResult> UploadFile(string documentDescription = "")
         {

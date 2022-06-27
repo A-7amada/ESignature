@@ -3,26 +3,28 @@
 @using BTIT.EPM.Web.Areas.App.Models.FileSignatures
 @model FileSignatureViewModel
 
-@await Html.PartialAsync("~/Areas/App/Views/Common/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel(L("Details")))
-
-<div class="modal-body">
-    <div id="FileSignatureInformationsTab">
-        
-        <div class="row">
-            <div class="col-6 mb-3">
-                <h6>@L("Name") :</h6>
-                @Model.FileSignature.Name
-            </div>
-            <div class="col-6 mb-3">
-                <h6>@L("Describtion") :</h6>
-                @Model.FileSignature.Describtion
-            </div>
-
-
-        </div>
-
-    </div>
+@await Html.PartialAsync("~/Areas/App/Views/Common/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel(L("Preview")))
+<div class="modal-body" style="height:750px">
+    <input type="hidden" id="DocPreviewPaths" name="DocPreviewPath" value="@Model.FileSignature.FileUrl">
+    <div id="FilePreview" style="height:700px"></div>
 </div>
+<script>
+    $(document).ready(function () {
+        let filePath = $('#DocPreviewPaths').val();
+        console.log("filePath", filePath);
+            var options = {
+                height: "100%",
+                page: '2',
+                pdfOpenParams: {
+                    view: 'FitV',
+                    pagemode: 'thumbs',
+                    search: 'lorem ipsum'
+                }
+            };
+        PDFObject.embed(filePath, "#FilePreview", options);
+        });
 
+
+    </script>
 @await Html.PartialAsync("~/Areas/App/Views/Common/Modals/_ModalFooterWithClose.cshtml")
 

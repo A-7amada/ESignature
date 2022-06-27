@@ -115,7 +115,7 @@ namespace BTIT.EPM.Documents
 
             return output;
         }
-
+        
         public async Task<List<GetDocumentForViewDto>> GetDocuments(long? documentBagId = null, long? documentTypeEnum = null)
         {
             var FilteredDocuments = _documentRepository.GetAll()

@@ -1,6 +1,5 @@
 @using BTIT.EPM.Documents.Dtos;
 @model FileUploadData
-
 <form id="fileuploadForm" role="form" class="form">
 
 
@@ -32,12 +31,29 @@
         <!-- The container for the uploaded files -->
         <div id="files" class="files" style="max-height: 150px; overflow-y: auto; margin: 15px;">
             <ul id="documentsList">
-                @if(Model.Documents != null) foreach(var item in Model.Documents)
-                {
-                    <li><div class="files" style="max-height: 150px; overflow-y: auto; margin: 15px;"><a href="/App/Documents/GetFile?documentId=@item.Id&amp;contentType=@item.ContentType" download=">@item.FileName">@item.Comment (@item.FileName)</a><a id="deleteDocumentBtn" name="deleteDocumentBtn" href="javascript:void(0);" data-id="@item.Id" class="pull-right text-danger" style="margin-right: 10px"><i class="fa fa-trash" aria-hidden="true"></i></a></div></li>
-                }
+                @if (Model.Documents != null) foreach (var item in Model.Documents)
+                    {
+                        <li>
+                            <div class="files" style="max-height: 150px; overflow-y: auto; margin: 15px;">
+                                <a href="/App/Documents/GetFile?documentId=@item.Id&amp;contentType=@item.ContentType" download=">@item.FileName">@item.Comment (@item.FileName)</a>
+                                <a id="deleteDocumentBtn" name="deleteDocumentBtn" href="javascript:void(0);" data-id="@item.Id" class="pull-right text-danger" style="margin-right: 10px"><i class="fa fa-trash" aria-hidden="true"></i></a>
+                                @*<a id="getDocumentBtn" name="getDocumentBtn" href="javascript:void(0);" data-id="@item.Id" data-contentType="@item.ContentType" class="pull-right text-danger" style="margin-block: 20px"><i class="fa fa-id-card" aria-hidden="true"></i></a>*@
+                            </div>
+                        </li>
+                    }
             </ul>
+
         </div>
+        <input type="hidden" id="DocPaths" name="DocPaths">
+        <div id="viewer"></div>
+
+        <style>
+            .pdfobject-container {
+                height: 30rem;
+                border: 1rem solid rgba(0,0,0,.1);
+            }
+        </style>
+
 
     </div>
 

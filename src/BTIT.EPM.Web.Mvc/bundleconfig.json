@@ -22,5 +22,11 @@
     "inputFiles": [
       "wwwroot/view-resources/Areas/App/Views/FileSignatures/CreateOrEdit.js"
     ]
+  },
+  {
+    "outputFileName": "wwwroot/lib/pdfobject/pdfobject.min.js",
+    "inputFiles": [
+      "wwwroot/lib/pdfobject/pdfobject.js"
+    ]
   }
 ]
