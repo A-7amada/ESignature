@@ -20,6 +20,8 @@ using BTIT.EPM.Documents.Dtos;
 using BTIT.EPM.ESignatureDemo;
 using Spire.Pdf;
 using Spire.Pdf.Security;
+using BTIT.EPM.Web.Areas.App.Models.Documents;
+
 namespace BTIT.EPM.Web.Areas.App.Controllers
 {
     [Area("App")]
@@ -202,6 +204,16 @@ namespace BTIT.EPM.Web.Areas.App.Controllers
             }
 
             return File(fileObject.Document.BinaryObjectBytes, fileObject.Document.ContentType);
+        }
+
+        public async Task<PartialViewResult> ViewFileModal(string fileUrl)
+        {
+            var model = new DocumentViewModel()
+            {
+               FileUrl= fileUrl
+            };
+
+            return PartialView("_ViewFileModal", model);
         }
 
     }

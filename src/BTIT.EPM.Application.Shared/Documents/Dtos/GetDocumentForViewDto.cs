@@ -11,5 +11,6 @@
         public string DocumentBagDocumentBagId { get; set; }
 
         public string BinaryObjectDescription { get; set; }
+        public string FileUrl { get; set; }
     }
 }

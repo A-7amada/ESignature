@@ -1,9 +1,9 @@
 ﻿$(function () {
     'use strict';
     var _documentsService = abp.services.app.documents;
-    var _viewFileSignatureModal = new app.ModalManager({
-        viewUrl: abp.appPath + 'App/FileSignatures/ViewFilePreviewModal',
-        modalClass: 'ViewFileSignatureModal',
+    var _viewFileModal = new app.ModalManager({
+        viewUrl: abp.appPath + 'App/Documents/ViewFileModal',
+        modalClass: 'ViewFileModal',
         modalSize: 'modal-xl'
     });
     $('#documentsList').on('click', '#deleteDocumentBtn', function () {
@@ -35,7 +35,8 @@
                 .done(function (res) {
                     console.log("res", res);
                     let fileUrl = abp.appPath + 'App/Documents/GetFile?documentId=' + res.document.id + '&contentType=' + res.document.contentType;
-                    _viewFileSignatureModal.open({ fileUrl: fileUrl });
+                    _viewFileModal.open({ fileUrl: fileUrl });
+                   // window.open('/App/Documents/GetFile?documentId=' + data.record.documentId + '', '_blank');
                     //var options = {
                     //    height: "400px",
                     //    page: '2',
@@ -70,7 +71,7 @@
                 var fileUrl = abp.appPath + 'App/Documents/GetFile?documentId=' + jsonResult.result.id + '&contentType=' + jsonResult.result.contentType;
 
                 var uploadedfile = '<li><div class="files" style="max-height: 150px; overflow-y: auto; margin: 15px;"><a href = "' + fileUrl + '" download = "' + jsonResult.result.documentDescription + '" >' + jsonResult.result.documentDescription + '</a >'
-                uploadedfile = uploadedfile + '<a id="getDocumentBtn" name="getDocumentBtn" href="javascript:void(0);" data-id="' + jsonResult.result.id + '" class="pull-center text-danger" style="margin-right: 10px" >Preview<i class="fa fa-id-card" aria-hidden="true"></i></a></div ></li>';
+                uploadedfile = uploadedfile + '<a id="getDocumentBtn" name="getDocumentBtn" href="javascript:void(0);" data-id="' + jsonResult.result.id + '" class="text-danger" style="padding-left: 300px;" >Preview<i class="fa fa-id-card" aria-hidden="true"></i></a>';
                 uploadedfile = uploadedfile + '<a id="deleteDocumentBtn" name="deleteDocumentBtn" href="javascript:void(0);" data-id="' + jsonResult.result.id + '" class="pull-right text-danger" style="margin-right: 10px"><i class="fa fa-trash" aria-hidden="true"></i></a></div ></li>';
                 $("#documentsList").append(uploadedfile);
                 $('#DocPaths').val(fileUrl);

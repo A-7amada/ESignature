@@ -1,0 +1,31 @@
+﻿
+@using BTIT.EPM.Web.Areas.App.Models.Common.Modals
+@using BTIT.EPM.Web.Areas.App.Models.Documents
+@model DocumentViewModel
+
+
+@await Html.PartialAsync("~/Areas/App/Views/Common/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel(L("Preview")))
+<div class="modal-body" style="height:750px">
+    <input type="hidden" id="DocPreviewPaths" name="DocPreviewPath" value="@Model.FileUrl">
+    <div id="FilePreview" style="height:700px"></div>
+</div>
+<script>
+    $(document).ready(function () {
+        let filePath = $('#DocPreviewPaths').val();
+        console.log("filePath", filePath);
+        var options = {
+            height: "100%",
+            page: '2',
+            pdfOpenParams: {
+                view: 'FitV',
+                pagemode: 'thumbs',
+                search: 'lorem ipsum'
+            }
+        };
+        PDFObject.embed(filePath, "#FilePreview", options);
+    });
+
+
+</script>
+@await Html.PartialAsync("~/Areas/App/Views/Common/Modals/_ModalFooterWithClose.cshtml")
+

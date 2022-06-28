@@ -1243,6 +1243,8 @@
     <text name="SwitchToDelegatedUserWarningMessage">Are you sure to switch to user {0} ?</text>
     <text name="SwitchToUser">Switch to user</text>
     <text name="ExpiresAt">Expires at {0}</text>
-    <text name="ThereIsNoActiveUserDelegationBetweenYourUserAndCurrentUser">There is no active user delegation between your user and current user !</text>
+	  <text name="Preview">Preview</text>
+	  
+	  <text name="ThereIsNoActiveUserDelegationBetweenYourUserAndCurrentUser">There is no active user delegation between your user and current user !</text>
   </texts>
 </localizationDictionary>
